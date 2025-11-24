@@ -55,10 +55,16 @@
     },
     "FORGOT": {
       "TITLE": "Forgot Password",
-      "SUBTITLE": "Enter your email to receive a reset link.",
+      "SUBTITLE": "Enter your email to receive a reset code.",
       "EMAIL": "Registered Email",
-      "BUTTON": "Send Link",
-      "SUCCESS": "Reset link sent (if email exists).",
+      "BUTTON_SEND": "Send Code",
+      "STEP2_TITLE": "Reset Password",
+      "STEP2_SUBTITLE": "Enter the OTP code and your new password.",
+      "LABEL_CODE": "OTP Code",
+      "LABEL_NEW_PASS": "New Password",
+      "LABEL_CONFIRM_PASS": "Confirm New Password",
+      "BUTTON_RESET": "Reset Password",
+      "SUCCESS": "Password reset successful! Redirecting...",
       "BACK": "Back to login"
     },
     "VERIFY": {

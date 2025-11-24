@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../services/auth.service';
-import { LangService, LangCode } from '../../services/language.service'; // Import LangService
+import { LangService, LangCode } from '../../services/language.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -14,35 +14,86 @@ import { LangService, LangCode } from '../../services/language.service'; // Impo
   styleUrls: ['./forgot-password.component.css'],
 })
 export class ForgotPasswordComponent {
+  // Dữ liệu form
   email = '';
-  isSent = false;
+  otpCode = '';
+  newPassword = '';
+  confirmPassword = '';
+
+  // Trạng thái UI
+  step = 1; // 1: Nhập email, 2: Nhập OTP & Pass mới
   isLoading = false;
   errorMessage = '';
-  currentLang: LangCode; // Biến ngôn ngữ
+  successMessage = '';
+  currentLang: LangCode;
 
   constructor(
     private auth: AuthService, 
-    public langService: LangService // Inject Service
+    private router: Router,
+    public langService: LangService
   ) {
     this.currentLang = this.langService.getLanguage();
   }
 
-  // Hàm đổi ngôn ngữ
   setLang(lang: string) {
     this.langService.setLanguage(lang as LangCode);
     this.currentLang = lang as LangCode;
   }
 
-  submit() {
-    if (!this.email) return;
+  // BƯỚC 1: Gửi yêu cầu lấy mã
+  sendCode() {
+    if (!this.email) {
+      this.errorMessage = 'Vui lòng nhập email.';
+      return;
+    }
     this.isLoading = true;
     this.errorMessage = '';
-    this.isSent = false;
 
-    // Giả lập API
-    setTimeout(() => {
-      this.isSent = true;
-      this.isLoading = false;
-    }, 1000);
+    this.auth.forgotPassword(this.email).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.step = 2; // Chuyển sang bước 2
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error?.error || 'Không tìm thấy email hoặc lỗi hệ thống.';
+      },
+    });
+  }
+
+  // BƯỚC 2: Đổi mật khẩu
+  resetPassword() {
+    if (!this.otpCode || !this.newPassword || !this.confirmPassword) {
+      this.errorMessage = 'Vui lòng nhập đầy đủ thông tin.';
+      return;
+    }
+
+    if (this.newPassword !== this.confirmPassword) {
+      this.errorMessage = 'Mật khẩu xác nhận không khớp.';
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const payload = {
+      email: this.email,
+      code: this.otpCode,
+      newPassword: this.newPassword
+    };
+
+    this.auth.resetPassword(payload).subscribe({
+      next: () => {
+        this.isLoading = false;
+        this.successMessage = 'SUCCESS'; // Hiện thông báo thành công
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorMessage = err.error?.error || 'Mã xác thực sai hoặc hết hạn.';
+      },
+    });
   }
 }

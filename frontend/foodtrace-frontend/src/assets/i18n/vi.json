@@ -55,10 +55,16 @@
     },
     "FORGOT": {
       "TITLE": "Quên mật khẩu",
-      "SUBTITLE": "Nhập email để nhận liên kết đặt lại mật khẩu.",
+      "SUBTITLE": "Nhập email để nhận mã xác thực đặt lại mật khẩu.",
       "EMAIL": "Email đăng ký",
-      "BUTTON": "Gửi liên kết",
-      "SUCCESS": "Liên kết đặt lại mật khẩu đã được gửi (nếu email tồn tại).",
+      "BUTTON_SEND": "Gửi mã xác thực",
+      "STEP2_TITLE": "Đặt lại mật khẩu",
+      "STEP2_SUBTITLE": "Nhập mã OTP từ email và mật khẩu mới.",
+      "LABEL_CODE": "Mã OTP (6 số)",
+      "LABEL_NEW_PASS": "Mật khẩu mới",
+      "LABEL_CONFIRM_PASS": "Xác nhận mật khẩu mới",
+      "BUTTON_RESET": "Đổi mật khẩu",
+      "SUCCESS": "Đổi mật khẩu thành công! Đang chuyển về đăng nhập...",
       "BACK": "Quay lại đăng nhập"
     },
     "VERIFY": {
