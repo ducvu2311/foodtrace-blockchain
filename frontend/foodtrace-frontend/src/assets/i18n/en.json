@@ -60,6 +60,17 @@
       "BUTTON": "Send Link",
       "SUCCESS": "Reset link sent (if email exists).",
       "BACK": "Back to login"
+    },
+    "VERIFY": {
+      "TITLE": "Account Verification",
+      "SUBTITLE": "Please enter the 6-digit OTP sent to your email.",
+      "LABEL_EMAIL": "Email",
+      "LABEL_CODE": "OTP Code",
+      "PLACEHOLDER_CODE": "Ex: 123456",
+      "BUTTON": "Verify",
+      "SUCCESS": "Verification successful!",
+      "REDIRECT": "Redirecting to login...",
+      "BACK": "Back to login"
     }
   },
   "PAGES": {
@@ -104,7 +115,12 @@
       "TITLE": "Product Traceability",
       "SUBTITLE": "Enter batch code or QR to view product journey.",
       "PLACEHOLDER": "Ex: LOT-2025-001 or QR code",
-      "BTN_SEARCH": "Trace"
+      "BTN_SEARCH": "Trace",
+      "BLOCKCHAIN": {
+        "VERIFIED": "Data verified on Blockchain",
+        "UNVERIFIED": "Data not verified on Blockchain",
+        "WARNING": "Warning: Data might be unsynced or altered."
+      }
     },
     "ACTIVITIES": {
       "TITLE": "Activity Log",

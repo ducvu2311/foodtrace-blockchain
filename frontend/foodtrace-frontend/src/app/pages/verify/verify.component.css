@@ -1,0 +1,15 @@
+/* Import lại style của Login để đồng bộ giao diện */
+@import '../login/login.component.css';
+
+/* Tinh chỉnh riêng cho card xác thực */
+.auth-card.single-column {
+  display: block; /* Ghi đè grid của login */
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+/* Ẩn cột trái của login nếu lỡ copy html sang */
+.auth-left {
+  display: none;
+}

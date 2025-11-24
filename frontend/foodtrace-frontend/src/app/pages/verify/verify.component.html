@@ -1,0 +1,54 @@
+<div class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card single-column">
+      
+      <div class="auth-title" style="text-align: center;">
+        <h1>Xác thực tài khoản</h1>
+        <p class="subtitle">Vui lòng nhập mã OTP (6 số) đã được gửi đến email của bạn.</p>
+      </div>
+
+      <form class="auth-form" (ngSubmit)="submit()" *ngIf="!isSuccess">
+        <div class="input-group">
+          <label>Email nhận mã</label>
+          <input 
+            type="email" 
+            name="email" 
+            [(ngModel)]="email" 
+            required 
+            placeholder="name@company.com" 
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Mã OTP</label>
+          <input 
+            type="text" 
+            name="code" 
+            [(ngModel)]="code" 
+            required 
+            placeholder="------" 
+            maxlength="6"
+            style="text-align: center; letter-spacing: 8px; font-weight: bold; font-size: 24px;"
+          />
+        </div>
+
+        <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+        <button type="submit" class="btn-primary" [disabled]="isLoading">
+          {{ isLoading ? 'Đang kiểm tra...' : 'Xác nhận' }}
+        </button>
+
+        <div class="auth-links" style="justify-content: center; margin-top: 20px;">
+          <a routerLink="/login" class="link-register">← Quay lại đăng nhập</a>
+        </div>
+      </form>
+
+      <div class="success-msg" *ngIf="isSuccess" style="text-align: center; padding: 20px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+        <h3 style="color: #16a34a;">Xác thực thành công!</h3>
+        <p style="color: #6b7280;">Tài khoản đã được kích hoạt. Đang chuyển hướng về trang đăng nhập...</p>
+      </div>
+
+    </div>
+  </div>
+</div>

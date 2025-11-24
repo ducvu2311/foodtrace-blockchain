@@ -19,12 +19,12 @@ export class RegisterComponent {
   password = '';
   confirmPassword = '';
   
-  // Biến cho màn hình xác thực
-  verificationCode = '';
-  step: 'register' | 'verify' = 'register';
-
+  // FIX: Thêm các thuộc tính còn thiếu
   isLoading = false;
   errorMessage = '';
+  step: 'register' | 'verify' = 'register'; // Quản lý trạng thái màn hình
+  verificationCode = ''; // Lưu mã OTP người dùng nhập
+
   currentLang: LangCode;
 
   constructor(
@@ -35,48 +35,57 @@ export class RegisterComponent {
     this.currentLang = this.langService.getLanguage();
   }
 
-  setLang(lang: LangCode) {
-    this.langService.setLanguage(lang);
-    this.currentLang = lang;
+  setLang(lang: string) {
+    this.langService.setLanguage(lang as LangCode);
+    this.currentLang = lang as LangCode;
   }
 
-  // BƯỚC 1: Đăng ký
   register() {
+    // 1. Validate cơ bản
     if (!this.fullName || !this.email || !this.password) {
       this.errorMessage = 'Vui lòng nhập đầy đủ thông tin.';
       return;
     }
+
     if (this.password !== this.confirmPassword) {
-      this.errorMessage = 'Mật khẩu không khớp.';
+      this.errorMessage = 'Mật khẩu xác nhận không khớp.';
       return;
     }
 
     this.isLoading = true;
     this.errorMessage = '';
 
+    // 2. Chuẩn bị dữ liệu
     const payload = {
-      username: this.email, // Backend dùng email làm username
+      username: this.email,
       email: this.email,
       full_name: this.fullName,
       password: this.password,
-      role: 'user' // Mặc định role
+      role: 'user', 
     };
 
+    // 3. Gọi API Đăng ký
     this.authService.register(payload).subscribe({
       next: () => {
         this.isLoading = false;
-        // Chuyển sang bước xác thực
-        this.step = 'verify'; 
-        alert('Đăng ký thành công! Vui lòng kiểm tra email để lấy mã xác thực.');
+        // Chuyển sang màn hình nhập mã (step = 'verify')
+        // Đây là logic để HTML hiển thị phần nhập mã OTP
+        if(confirm('Đăng ký thành công! Mã xác thực đã được gửi đến email. Nhập mã ngay?')) {
+           this.router.navigate(['/verify'], { queryParams: { email: this.email } });
+        } else {
+           this.router.navigate(['/login']);
+        }
       },
       error: (err) => {
         this.isLoading = false;
-        this.errorMessage = err.error?.error || 'Đăng ký thất bại.';
+        this.errorMessage = err.error?.error || 'Đăng ký thất bại. Vui lòng thử lại.';
       }
     });
   }
 
-  // BƯỚC 2: Xác thực
+  // FIX: Thêm hàm verify() để xử lý nút "Xác nhận" trong HTML (nếu bạn dùng logic verify tại chỗ)
+  // Tuy nhiên, theo luồng mới nhất, chúng ta đang chuyển sang trang /verify riêng biệt.
+  // Nếu bạn muốn giữ logic verify ngay tại trang Register (không chuyển trang), dùng hàm này:
   verify() {
     if (!this.verificationCode) return;
     
