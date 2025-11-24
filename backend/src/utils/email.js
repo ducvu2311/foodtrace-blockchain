@@ -19,6 +19,7 @@ async function sendEmail(to, subject, html) {
     subject,
     html,
   };
+  console.log(`Email sent to ${to}`);
   return transporter.sendMail(mailOptions);
 }
 

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "test": "node ./test/blockchain-test.js",
     "migrate:new": "db-migrate --sql-file -m src/db/mysql/migrations --config src/db/mysql/migrate.conf.json create ",
     "migrate:up": "db-migrate up -m src/db/mysql/migrations --config src/db/mysql/migrate.conf.json",
     "migrate:down": "db-migrate down -m src/db/mysql/migrations --config src/db/mysql/migrate.conf.json"
