@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Batch } from '../../core/types';
 
 export const ENDPOINTS = {
   AUTH: {
@@ -15,28 +16,38 @@ export const ENDPOINTS = {
   FARM: {
     BASE: "farms",
     SEARCH: "farms/search"
+  },
+  BATCH: {
+    BASE: "batches",
+    SEARCH: "batches/search",
+    DETAIL: (id: number) => `batches/${id}`
+  },
+  TRACE: {
+    BASE: "trace",
+    TRACE_BATCH_NUMBER: (batch_number: Batch["batch_number"]) => `trace/${batch_number}`,
+    TRACE_BATCH_NUMBER_DETAILED: (batch_number: Batch["batch_number"]) => `trace/${batch_number}/details`
   }
 }
 
-@Injectable({ providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class ApiService {
   private apiUrl = `${environment.apiUrl}/api`;
 
-  constructor(private client: HttpClient) {}
+  constructor(private client: HttpClient) { }
 
-  public post(endpoint: string, body: any): Observable<any> {
-    return this.client.post(`${this.apiUrl}/${endpoint}`, body);
+  public post<T>(endpoint: string, body: any): Observable<any> {
+    return this.client.post<T>(`${this.apiUrl}/${endpoint}`, body);
   }
 
-  public get(endpoint: string) {
-    return this.client.get(`${this.apiUrl}/${endpoint}`);
+  public get<T>(endpoint: string) {
+    return this.client.get<T>(`${this.apiUrl}/${endpoint}`);
   }
 
-  public put(endpoint: string, body: any): Observable<any> {
-    return this.client.put(`${this.apiUrl}/${endpoint}`, body);
+  public put<T>(endpoint: string, body: any): Observable<any> {
+    return this.client.put<T>(`${this.apiUrl}/${endpoint}`, body);
   }
 
-  public delete(endpoint: string): Observable<any> {
-    return this.client.delete(`${this.apiUrl}/${endpoint}`);
+  public delete<T>(endpoint: string): Observable<any> {
+    return this.client.delete<T>(`${this.apiUrl}/${endpoint}`);
   }
 }
