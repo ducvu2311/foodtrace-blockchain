@@ -1,75 +1,64 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { BatchService } from '../../services/batches.service';
-import { BatchDetail } from '../../../core/types';
+import { BatchService } from '../../services/batch.service';
 
 @Component({
   selector: 'app-batch-detail',
   standalone: true,
   imports: [CommonModule, TranslateModule],
   templateUrl: './batch-detail.component.html',
-  styleUrls: ['./batch-detail.component.css'],
+  styleUrls: ['./batch-detail.component.css']
 })
-export class BatchDetailComponent {
-  private id: number;
-  data: BatchDetail = {
-    blockchain_verification: {
-      onChainHash: '',
-      onChainTime: new Date(),
-      match: false
-    },
-    applied_license_id: 0,
-    batch_id: 0,
-    batch_number: '',
-    blockchain_tx: '',
-    farm_id: 0,
-    farm_name: '',
-    origin_type: '',
-    product_id: 0,
-    product_name: '',
-    proof_hash: '',
-    updated_at: new Date(),
-    created_at: new Date(),
-    expiry_date: new Date(),
-    production_date: new Date(),
-    created_by: null,
-    updated_by: null
+export class BatchDetailComponent implements OnInit {
+  batchId!: string;
+  
+  // FIX: Khai báo biến batch để HTML sử dụng
+  batch: any = { 
+    code: '', 
+    productName: '', 
+    farmName: '', 
+    status: '', 
+    quantity: 0, 
+    unit: '', 
+    harvestedAt: '', 
+    producedAt: '', 
+    facilityName: '' 
   };
+  
+  constructor(
+    private route: ActivatedRoute, 
+    private location: Location,
+    private batchService: BatchService
+  ) {
+    this.batchId = this.route.snapshot.params['id'];
+  }
 
-  // timeline = [
-  //   {
-  //     label: 'Tạo batch bởi Farmer',
-  //     time: '2025-10-01 08:00',
-  //     by: 'Nguyễn Văn A',
-  //   },
-  //   {
-  //     label: 'Cập nhật thông tin thu hoạch',
-  //     time: '2025-10-10 09:30',
-  //     by: 'QC Team',
-  //   },
-  //   {
-  //     label: 'Xử lý & đóng gói',
-  //     time: '2025-10-11 14:00',
-  //     by: 'Packaging Center',
-  //   },
-  //   {
-  //     label: 'Push record lên Blockchain',
-  //     time: '2025-10-11 14:05',
-  //     by: 'System',
-  //   },
-  // ];
-
-  constructor(private route: ActivatedRoute, private batchService: BatchService) {
-    this.id = this.route.snapshot.params['id'];
-    this.batchService.detail(this.id).subscribe({
-      next: (value) => {
-        this.data = value.data;
-        console.log(value);
+  ngOnInit() {
+    this.batchService.getBatchById(this.batchId).subscribe({
+      next: (res: any) => {
+        if (res.data) {
+          const d = res.data;
+          this.batch = {
+            code: d.batch_number,
+            productName: d.product_name || 'Sản phẩm',
+            farmName: d.farm_name || 'Nông trại',
+            status: d.expiry_date ? 'Active' : 'Expired',
+            quantity: 1000,
+            unit: 'kg',
+            harvestedAt: d.production_date,
+            producedAt: d.created_at,
+            facilityName: 'Nhà máy'
+          };
+        }
       },
-      error: (err) => { console.log(err) },
-      complete: () => { }
-    })
+      error: (err: any) => console.error('Lỗi lấy chi tiết:', err)
+    });
+  }
+
+  // FIX: Thêm hàm goBack
+  goBack() {
+    this.location.back();
   }
 }
