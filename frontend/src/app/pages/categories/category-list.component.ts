@@ -10,8 +10,7 @@ import { RouterModule, Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, TranslateModule, FormsModule, RouterModule],
   templateUrl: './category-list.component.html',
-  // 👇 Quan trọng: Trỏ đến file CSS bạn vừa tạo ở trên
-  styleUrls: ['./category-list.component.css'] 
+  styleUrls: ['./category-list.component.css']
 })
 export class CategoryListComponent implements OnInit {
   categories: any[] = [];
@@ -21,17 +20,17 @@ export class CategoryListComponent implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadCategories();
   }
 
   loadCategories() {
-    this.categoryService.getAllCategories().subscribe(res => {
+    this.categoryService.getAll().subscribe(res => {
       const data = res.data || [];
       if (this.searchTerm) {
-        this.categories = data.filter((c: any) => 
+        this.categories = data.filter((c: any) =>
           c.name.toLowerCase().includes(this.searchTerm.toLowerCase())
         );
       } else {
@@ -50,7 +49,7 @@ export class CategoryListComponent implements OnInit {
 
   deleteCategory(id: any) {
     if (confirm('Bạn có chắc chắn muốn xóa danh mục này?')) {
-      this.categoryService.deleteCategory(id).subscribe({
+      this.categoryService.delete(id).subscribe({
         next: () => {
           alert('Đã xóa thành công!');
           this.loadCategories();

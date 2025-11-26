@@ -18,7 +18,11 @@ export class CategoryFormComponent implements OnInit {
   isLoading = false;
   category = { name: '', description: '' };
 
-  constructor(private categoryService: CategoryService, private route: ActivatedRoute, private location: Location) {}
+  constructor(
+    private categoryService: CategoryService,
+    private route: ActivatedRoute,
+    private location: Location
+  ) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -33,10 +37,10 @@ export class CategoryFormComponent implements OnInit {
   onSubmit() {
     if (!this.category.name) return alert('Nhập tên danh mục');
     this.isLoading = true;
-    const obs = this.isEditMode 
-      ? this.categoryService.updateCategory(this.categoryId, this.category)
-      : this.categoryService.createCategory(this.category);
-    
+    const obs = this.isEditMode
+      ? this.categoryService.update(this.categoryId, this.category)
+      : this.categoryService.create(this.category);
+
     obs.subscribe({
       next: () => { alert('Thành công'); this.goBack(); },
       error: () => { this.isLoading = false; alert('Lỗi'); }

@@ -20,6 +20,20 @@ export interface User {
 
 }
 
+export interface LabTest {
+  batch_id: number
+  certificate_url: string
+  created_at: Date
+  created_by: number | string
+  result: string
+  test_date: Date
+  test_id: string | number
+  test_type: string
+  tested_by: string
+  updated_at: Date
+  updated_by: string | number
+}
+
 export interface Farm {
   farm_id: number
   name: string
@@ -37,6 +51,17 @@ export interface Farm {
   updated_at: Date
   updated_by: number | null
   website: string | null
+}
+
+export interface Product {
+  category_name: string
+  created_at: Date
+  description: string
+  name: string
+  origin: string
+  product_id: number
+  status: string
+  updated_at: Date
 }
 
 export interface Batch {
@@ -87,6 +112,15 @@ export interface FarmQuery extends QueryRequest {
   district?: string,
   ward?: string,
   farmId?: number | string
+}
+
+export interface LabTestQuery extends QueryRequest {
+  testCode?: string,
+  batchNumber?: string,
+  batchId?: number,
+  result?: null,
+  fromDate?: Date,
+  toDate?: Date
 }
 
 export interface TraceEvent {

@@ -9,6 +9,7 @@ const { getPool } = require("../config/db.config");
 const { contract } = require("../config/blockchain");
 const SearchService = require("../services/search.service"); // ✅ MiniSearch
 const LicenseQuery = require("../requests/LicenseQuery");
+const contractService = require("../services/blockchain-contract.service");
 function createLicenseHash(license) {
   const json = JSON.stringify(license);
   return crypto.createHash("sha256").update(json).digest("hex");
@@ -35,7 +36,8 @@ const farmLicenseController = {
     if (!farm_id || !license_number || !license_type) {
       return res.status(400).json({
         success: false,
-        error: "Thiếu thông tin bắt buộc (farm_id, license_number, license_type)",
+        error:
+          "Thiếu thông tin bắt buộc (farm_id, license_number, license_type)",
       });
     }
 
@@ -49,10 +51,12 @@ const farmLicenseController = {
       if (role === "manufacturer") {
         const [farms] = await conn.query(
           "SELECT created_by FROM farms WHERE farm_id = ?",
-          [farm_id]
+          [farm_id],
         );
         if (!farms.length) {
-          return res.status(404).json({ success: false, error: "Không tìm thấy nông trại" });
+          return res
+            .status(404)
+            .json({ success: false, error: "Không tìm thấy nông trại" });
         }
         if (farms[0].created_by !== userId) {
           return res.status(403).json({
@@ -77,7 +81,7 @@ const farmLicenseController = {
           status || "valid",
           notes || null,
           userId,
-        ]
+        ],
       );
 
       const license_id = result.insertId;
@@ -96,7 +100,7 @@ const farmLicenseController = {
         await conn.query(
           `INSERT INTO media_files (entity_type, entity_id, file_url, file_type, caption, uploaded_by)
           VALUES ?`,
-          [fileRecords]
+          [fileRecords],
         );
       }
 
@@ -126,7 +130,7 @@ const farmLicenseController = {
 
       // // 5️⃣ Lưu TX + hash
       // await conn.query(
-      //   `UPDATE farm_licenses 
+      //   `UPDATE farm_licenses
       //    SET notes = CONCAT(IFNULL(notes,''), '\nBlockchain TX: ', ?),
       //        updated_by = ?, proof_hash = ?, blockchain_tx = ?, blockchain_block = ?
       //    WHERE license_id = ?`,
@@ -219,7 +223,7 @@ const farmLicenseController = {
       // ------- COUNT -------
       const [countRows] = await pool.query(
         `SELECT COUNT(*) AS total ${baseQuery}`,
-        params
+        params,
       );
       const total = countRows[0].total;
 
@@ -244,16 +248,15 @@ const farmLicenseController = {
           pageIndex: query.pageIndex,
           pageSize: query.pageSize,
           total,
-          totalPages: Math.ceil(total / query.pageSize)
+          totalPages: Math.ceil(total / query.pageSize),
         },
-        data: rows
+        data: rows,
       });
-
     } catch (err) {
       console.error("searchLicenses error:", err);
       return res.status(500).json({
         success: false,
-        error: "Không lấy được danh sách giấy chứng nhận"
+        error: "Không lấy được danh sách giấy chứng nhận",
       });
     }
   },
@@ -275,7 +278,7 @@ const farmLicenseController = {
            FROM farm_licenses l 
            JOIN farms f ON l.farm_id = f.farm_id
            WHERE l.license_id = ?`,
-          [id]
+          [id],
         );
 
         if (!check.length) {
@@ -298,7 +301,7 @@ const farmLicenseController = {
          FROM farm_licenses l
          LEFT JOIN farms f ON l.farm_id = f.farm_id
          WHERE l.license_id = ?`,
-        [id]
+        [id],
       );
 
       if (!rows.length) {
@@ -310,18 +313,11 @@ const farmLicenseController = {
       const license = rows[0];
 
       // Blockchain verify
-      let onChainHash = null;
-      let onChainTime = null;
-      let match = false;
-
-      try {
-        const result = await contract.getBatchHash(license.license_id);
-        onChainHash = result[0];
-        onChainTime = result[1];
-        match = license.proof_hash === onChainHash;
-      } catch (err) {
-        console.warn("⚠️ Blockchain verify error:", err.message);
-      }
+      let { onChainHash, onChainTime, verified } =
+        await contractService.getBatchHash(
+          license.license_id,
+          license.proof_hash,
+        );
 
       return res.status(200).json({
         success: true,
@@ -330,7 +326,7 @@ const farmLicenseController = {
           blockchain_verification: {
             onChainHash,
             onChainTime,
-            match,
+            match: verified,
           },
         },
       });
@@ -362,7 +358,7 @@ const farmLicenseController = {
          FROM farm_licenses l
          JOIN farms f ON l.farm_id = f.farm_id
          WHERE l.license_id = ?`,
-        [id]
+        [id],
       );
 
       if (!licenses.length) {
@@ -385,7 +381,7 @@ const farmLicenseController = {
       // Xóa media
       const [files] = await conn.query(
         `SELECT file_url FROM media_files WHERE entity_type='license' AND entity_id=?`,
-        [id]
+        [id],
       );
 
       const fs = require("fs");
@@ -402,7 +398,7 @@ const farmLicenseController = {
 
       await conn.query(
         `DELETE FROM media_files WHERE entity_type='license' AND entity_id=?`,
-        [id]
+        [id],
       );
 
       // Xóa license

@@ -4,7 +4,7 @@
  */
 
 const { getPool } = require("../config/db.config");
-const { contract } = require("../config/blockchain");
+const contractService = require("../services/blockchain-contract.service");
 
 const traceController = {
   /**
@@ -119,11 +119,6 @@ const traceController = {
     try {
       // Lấy thông tin cơ bản để xác định batch_id, farm_id, v.v.
       const [batches] = await pool.query(
-        //   `
-        //   SELECT b.batch_id, b.farm_id, b.applied_license_id, b.proof_hash, b.blockchain_tx, b.blockchain_block
-        //   FROM batches b
-        //   WHERE b.batch_number = ?
-        // `,
         `
         SELECT b.batch_id, b.product_id, b.batch_number, b.production_date,
                b.farm_id, b.applied_license_id, b.proof_hash, b.blockchain_tx
@@ -152,7 +147,7 @@ const traceController = {
         [batch.applied_license_id, batch.farm_id],
       );
 
-      // 🧩 Media files
+      // Media files
       const [mediaFiles] = await pool.query(
         `
           SELECT file_url, file_type, caption
@@ -164,6 +159,7 @@ const traceController = {
         [batch.farm_id, batch.batch_id],
       );
 
+      // Product
       const [product] = await pool.query(
         `
           SELECT name, description
@@ -173,23 +169,8 @@ const traceController = {
         [batch.product_id],
       );
 
-      // 🧩 Blockchain xác minh
-      let onChainHash = null;
-      let onChainTime = null;
-      let verified = false;
-
-      try {
-        const result = await contract.getBatchHash(batch.batch_id);
-        console.log(
-          `getBatchHash() result for batch_id=${batch.batch_id}: `,
-          result,
-        );
-        onChainHash = String(result[0]);
-        onChainTime = Number(result[1]);
-        verified = batch.proof_hash === onChainHash;
-      } catch (err) {
-        console.warn("⚠️ Blockchain không khả dụng:", err.message);
-      }
+      // Blockchain xác minh
+      let blockchainResult = await contractService.getBatchHash(batch);
 
       res.status(200).json({
         success: true,
@@ -199,11 +180,8 @@ const traceController = {
           product: product[0],
           batch: batch,
           blockchain: {
-            verified,
-            onChainHash,
-            onChainTime,
+            ...blockchainResult,
             blockchain_tx: batch.blockchain_tx,
-            // blockchain_block: batch.blockchain_block,
           },
         },
       });
