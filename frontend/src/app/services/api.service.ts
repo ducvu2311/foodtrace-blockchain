@@ -32,6 +32,11 @@ export const ENDPOINTS = {
     BASE: "products",
     SEARCH: "products/search",
     BY_ID: (id: string | number) => `products/${id}`
+  },
+  CATEGORY: {
+    BASE: "categories",
+    SEARCH: "categories/search",
+    BY_ID: (id: string | number) => `categories/${id}`
   }
 }
 

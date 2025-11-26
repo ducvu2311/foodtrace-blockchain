@@ -11,7 +11,6 @@ import { CategoryService } from '../../services/category.service';
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './product-form.component.html',
-  // CSS riêng cho form để đẹp hơn
   styles: './product-form.component.css'
 })
 export class ProductFormComponent implements OnInit {
@@ -40,9 +39,10 @@ export class ProductFormComponent implements OnInit {
 
   ngOnInit() {
     // 1. Load danh mục để đổ vào dropdown
-    this.categoryService.getAllCategories().subscribe({
+    this.categoryService.getAll().subscribe({
       next: (res) => {
         this.categories = res.data || [];
+        console.log(res);
       }
     });
 
