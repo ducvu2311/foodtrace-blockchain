@@ -4,20 +4,21 @@
  * Phiên bản có phân quyền theo role (admin / manufacturer / public)
  */
 
-const crypto = require('crypto');
-const { getPool } = require('../config/db.config');
+const crypto = require("crypto");
+const { getPool } = require("../config/db.config");
 const BatchesQuery = require("../requests/BatchesQuery");
-const QRCode = require('qrcode');
-const { contract } = require('../config/blockchain');
+const QRCode = require("qrcode");
+const { contract } = require("../config/blockchain");
 const SearchService = require("../services/search.service");
-require('dotenv').config();
+const contractService = require("../services/blockchain-contract.service");
+require("dotenv").config();
 
 /**
  * 🧩 Tạo SHA256 hash từ dữ liệu JSON
  */
 function createHash(data) {
   const json = JSON.stringify(data);
-  return crypto.createHash('sha256').update(json).digest('hex');
+  return crypto.createHash("sha256").update(json).digest("hex");
 }
 
 /**
@@ -31,7 +32,7 @@ function generateBatchNumber(productId) {
  * 🔗 Tạo đường dẫn QR code cho batch
  */
 function generateQrText(batchNumber) {
-  return `${process.env.QR_BASE_URL || 'https://foodtrace.local/trace/'}${batchNumber}`;
+  return `${process.env.QR_BASE_URL || "https://foodtrace.local/trace/"}${batchNumber}`;
 }
 
 const batchesController = {
@@ -50,9 +51,10 @@ const batchesController = {
     } = req.body;
 
     if (!product_id || !production_date) {
-      return res
-        .status(400)
-        .json({ success: false, error: 'Thiếu thông tin bắt buộc (product_id, production_date)' });
+      return res.status(400).json({
+        success: false,
+        error: "Thiếu thông tin bắt buộc (product_id, production_date)",
+      });
     }
 
     const pool = await getPool();
@@ -62,18 +64,21 @@ const batchesController = {
       await conn.beginTransaction();
 
       // 🔒 Manufacturer chỉ được tạo batch cho farm họ sở hữu
-      if (role === 'manufacturer') {
+      if (role === "manufacturer") {
         const [farms] = await conn.query(
-          'SELECT created_by FROM farms WHERE farm_id = ?',
-          [farm_id]
+          "SELECT created_by FROM farms WHERE farm_id = ?",
+          [farm_id],
         );
         if (!farms.length) {
-          return res.status(404).json({ success: false, error: 'Không tìm thấy nông trại' });
+          return res
+            .status(404)
+            .json({ success: false, error: "Không tìm thấy nông trại" });
         }
         if (farms[0].created_by !== userId) {
-          return res
-            .status(403)
-            .json({ success: false, error: 'Bạn không có quyền tạo batch cho farm này' });
+          return res.status(403).json({
+            success: false,
+            error: "Bạn không có quyền tạo batch cho farm này",
+          });
         }
       }
 
@@ -92,15 +97,21 @@ const batchesController = {
           batch_number,
           production_date,
           expiry_date || null,
-          origin_type || 'farm',
+          origin_type || "farm",
           userId,
-        ]
+        ],
       );
 
       const batch_id = result.insertId;
 
       // 3️⃣ Hash
-      const payload = { batch_id, product_id, production_date, farm_id, applied_license_id };
+      const payload = {
+        batch_id,
+        product_id,
+        production_date,
+        farm_id,
+        applied_license_id,
+      };
       const proof_hash = createHash(payload);
 
       // 4️⃣ Ghi blockchain
@@ -112,8 +123,8 @@ const batchesController = {
         blockchain_tx = receipt.hash;
         block_number = receipt.blockNumber;
       } catch (err) {
-        console.warn('⚠️ Lỗi ghi blockchain (fallback):', err.message);
-        blockchain_tx = '0x' + proof_hash.slice(0, 64);
+        console.warn("⚠️ Lỗi ghi blockchain (fallback):", err.message);
+        blockchain_tx = "0x" + proof_hash.slice(0, 64);
       }
 
       // 5️⃣ Cập nhật DB
@@ -121,23 +132,23 @@ const batchesController = {
         `UPDATE batches 
          SET proof_hash=?, blockchain_tx=?, blockchain_block=?, updated_by=? 
          WHERE batch_id=?`,
-        [proof_hash, blockchain_tx, block_number, userId, batch_id]
+        [proof_hash, blockchain_tx, block_number, userId, batch_id],
       );
 
       // 6️⃣ Upload file (nếu có)
       if (req.files && req.files.length > 0) {
         const fileRecords = req.files.map((f) => [
-          'batch',
+          "batch",
           batch_id,
           `/uploads/${f.filename}`,
-          f.mimetype.startsWith('image') ? 'image' : 'document',
+          f.mimetype.startsWith("image") ? "image" : "document",
           f.originalname,
           userId,
         ]);
 
         await conn.query(
           `INSERT INTO media_files (entity_type, entity_id, file_url, file_type, caption, uploaded_by) VALUES ?`,
-          [fileRecords]
+          [fileRecords],
         );
       }
 
@@ -148,7 +159,7 @@ const batchesController = {
       await conn.query(
         `INSERT INTO qr_codes (product_id, batch_id, qr_code, created_by)
          VALUES (?, ?, ?, ?)`,
-        [product_id, batch_id, qr_text, userId]
+        [product_id, batch_id, qr_text, userId],
       );
 
       await conn.commit();
@@ -157,12 +168,12 @@ const batchesController = {
       try {
         const [[product]] = await pool.query(
           `SELECT name FROM products WHERE product_id=?`,
-          [product_id]
+          [product_id],
         );
 
         const [[farm]] = await pool.query(
           `SELECT name FROM farms WHERE farm_id=?`,
-          [farm_id]
+          [farm_id],
         );
 
         SearchService.add({
@@ -174,8 +185,8 @@ const batchesController = {
           extra: {
             product_id,
             farm_id,
-            blockchain_tx
-          }
+            blockchain_tx,
+          },
         });
       } catch (e) {
         console.warn("⚠️ MiniSearch index failed:", e.message);
@@ -183,7 +194,7 @@ const batchesController = {
 
       return res.status(201).json({
         success: true,
-        message: '✅ Tạo lô hàng thành công và ghi blockchain',
+        message: "✅ Tạo lô hàng thành công và ghi blockchain",
         data: {
           batch_id,
           batch_number,
@@ -195,9 +206,9 @@ const batchesController = {
         },
       });
     } catch (err) {
-      console.error('❌ Lỗi tạo lô hàng:', err);
+      console.error("❌ Lỗi tạo lô hàng:", err);
       if (conn) await conn.rollback();
-      res.status(500).json({ success: false, error: 'Lỗi khi tạo lô hàng' });
+      res.status(500).json({ success: false, error: "Lỗi khi tạo lô hàng" });
     } finally {
       if (conn) conn.release();
     }
@@ -242,7 +253,11 @@ const batchesController = {
           )
         `);
 
-        params.push(`%${query.filter}%`, `%${query.filter}%`, `%${query.filter}%`);
+        params.push(
+          `%${query.filter}%`,
+          `%${query.filter}%`,
+          `%${query.filter}%`,
+        );
       }
 
       // Filter riêng theo field
@@ -279,7 +294,7 @@ const batchesController = {
       // ---- COUNT ----
       const [countRows] = await pool.query(
         `SELECT COUNT(*) AS total ${baseQuery}`,
-        params
+        params,
       );
       const total = countRows[0].total;
 
@@ -305,16 +320,15 @@ const batchesController = {
           pageIndex: query.pageIndex,
           pageSize: query.pageSize,
           total,
-          totalPages: Math.ceil(total / query.pageSize)
+          totalPages: Math.ceil(total / query.pageSize),
         },
-        data: rows
+        data: rows,
       });
-
     } catch (err) {
       console.error("searchBatches error:", err);
       res.status(500).json({
         success: false,
-        error: "Không lấy được danh sách lô hàng"
+        error: "Không lấy được danh sách lô hàng",
       });
     }
   },
@@ -330,18 +344,21 @@ const batchesController = {
       const pool = await getPool();
 
       // 🔒 Manufacturer chỉ xem batch của họ
-      if (role === 'manufacturer') {
+      if (role === "manufacturer") {
         const [check] = await pool.query(
           `SELECT created_by FROM batches WHERE batch_id = ?`,
-          [id]
+          [id],
         );
         if (!check.length) {
-          return res.status(404).json({ success: false, error: 'Không tìm thấy lô hàng' });
+          return res
+            .status(404)
+            .json({ success: false, error: "Không tìm thấy lô hàng" });
         }
         if (check[0].created_by !== userId) {
-          return res
-            .status(403)
-            .json({ success: false, error: 'Bạn không có quyền xem lô hàng này' });
+          return res.status(403).json({
+            success: false,
+            error: "Bạn không có quyền xem lô hàng này",
+          });
         }
       }
 
@@ -351,28 +368,20 @@ const batchesController = {
          LEFT JOIN products p ON b.product_id = p.product_id
          LEFT JOIN farms f ON b.farm_id = f.farm_id
          WHERE b.batch_id = ?`,
-        [id]
+        [id],
       );
 
       if (!rows.length) {
-        return res.status(404).json({ success: false, error: 'Không tìm thấy lô hàng' });
+        return res
+          .status(404)
+          .json({ success: false, error: "Không tìm thấy lô hàng" });
       }
 
       const batch = rows[0];
 
       // Blockchain verification
-      let onChainHash = null;
-      let onChainTime = null;
-      let match = false;
-
-      try {
-        const result = await contract.getBatchHash(batch.batch_id);
-        onChainHash = result[0];
-        onChainTime = result[1];
-        match = batch.proof_hash === onChainHash;
-      } catch (err) {
-        console.warn('⚠️ Không thể xác minh blockchain:', err.message);
-      }
+      let { onChainHash, onChainTime, verified } =
+        await contractService.getBatchHash(batch.batch_id, batch.proof_hash);
 
       res.json({
         success: true,
@@ -381,13 +390,15 @@ const batchesController = {
           blockchain_verification: {
             onChainHash,
             onChainTime,
-            match,
+            match: verified,
           },
         },
       });
     } catch (err) {
-      console.error('getBatchById error:', err);
-      res.status(500).json({ success: false, error: 'Lỗi khi lấy thông tin lô hàng' });
+      console.error("getBatchById error:", err);
+      res
+        .status(500)
+        .json({ success: false, error: "Lỗi khi lấy thông tin lô hàng" });
     }
   },
 };

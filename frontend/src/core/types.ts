@@ -100,6 +100,15 @@ export interface FarmQuery extends QueryRequest {
   farmId?: number | string
 }
 
+export interface LabTestQuery extends QueryRequest {
+  testCode?: string,
+  batchNumber?: string,
+  batchId?: number,
+  result?: null,
+  fromDate?: Date,
+  toDate?: Date
+}
+
 export interface TraceEvent {
   time: string;
   location: string;
