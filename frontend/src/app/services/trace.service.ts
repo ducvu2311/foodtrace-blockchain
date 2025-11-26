@@ -1,42 +1,50 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable, forkJoin, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { ApiService, ENDPOINTS } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class TraceService {
-  constructor(private apiService: ApiService) { }
+  private apiUrl = `${environment.apiUrl}/api/trace`;
 
-  /**
-   * Gọi đồng thời 2 API để lấy full thông tin:
-   * 1. Thông tin cơ bản (Batch, Product, LabTests)
-   * 2. Thông tin chi tiết (Blockchain, Farm, Media)
-   */
+  constructor(private http: HttpClient) {}
+
   traceFullInfo(batchCode: string): Observable<any> {
-    const basic$ = this.apiService.get<any>(
-      ENDPOINTS.TRACE.TRACE_BATCH_NUMBER(batchCode)
-    ).pipe(
-      catchError(err => of({ error: true, msg: 'Không tìm thấy thông tin cơ bản' }))
+    // Mock Data Demo
+    if (batchCode === 'LOT-2025-001') {
+      return of({
+        batch: { batch_number: 'LOT-2025-001', production_date: '2025-11-20' },
+        product: { name: 'Dâu Tây Giống Nhật (Hữu Cơ)', description: 'VietGAP Standard' },
+        farm: { farm_name: 'Nông Trại Rau Sạch Đà Lạt' },
+        blockchain: { verified: true, blockchain_tx: '0x8f9a...', onChainTime: '1732180000' }
+      });
+    }
+
+    // Gọi API 1: Thông tin cơ bản
+    const basic$ = this.http.get<any>(`${this.apiUrl}/${batchCode}`).pipe(
+      catchError(() => of({ error: true }))
+    );
+    
+    // Gọi API 2: Thông tin chi tiết
+    const details$ = this.http.get<any>(`${this.apiUrl}/${batchCode}/details`).pipe(
+      catchError(() => of({ error: true }))
     );
 
-    const details$ = this.apiService.get<any>(
-      ENDPOINTS.TRACE.TRACE_BATCH_NUMBER_DETAILED(batchCode),
-    ).pipe(
-      catchError(err => of({ error: true, msg: 'Không tìm thấy thông tin chi tiết' }))
-    );
-
+    // Gộp 2 API
     return forkJoin([basic$, details$]).pipe(
-      map(([basicRes, detailRes]) => {
-        // Kiểm tra nếu cả 2 đều lỗi
-        if (basicRes.error && detailRes.error) {
-          throw new Error('Không tìm thấy lô hàng này.');
-        }
+      map((results: any[]) => {
+        const basicRes = results[0];
+        const detailRes = results[1];
 
-        // Merge dữ liệu lại
-        return {
-          ...basicRes.data,   // batch, product, lab_tests
-          ...detailRes.data   // farm, media_files, blockchain
-        };
+        if (basicRes.error && detailRes.error) {
+          throw new Error('Không tìm thấy dữ liệu.');
+        }
+        
+        const bData = basicRes.success ? basicRes.data : {};
+        const dData = detailRes.success ? detailRes.data : {};
+        
+        return { ...bData, ...dData };
       })
     );
   }

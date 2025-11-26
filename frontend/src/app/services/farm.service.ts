@@ -1,36 +1,39 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiService, ENDPOINTS } from './api.service';
-import { Farm, IPaginated } from '../../core/types';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class FarmService {
-  constructor(private apiService: ApiService) { }
+  private apiUrl = `${environment.apiUrl}/api/farms`;
 
-  // Hàm tạo nông trại có upload file
-  create(data: any, files: File[]): Observable<any> {
-    const formData = new FormData();
+  constructor(private http: HttpClient) {}
 
-    // Append các trường text
-    formData.append('name', data.name);
-    formData.append('address', data.address);
-    formData.append('owner_name', data.ownerName);
-    formData.append('contact_email', data.email);
-    formData.append('contact_phone', data.phone);
-
-    // Append file (Key là 'files' giống backend multer config)
-    if (files && files.length > 0) {
-      files.forEach(file => {
-        formData.append('files', file);
-      });
-    }
-
-    return this.apiService.post(`${ENDPOINTS.FARM.BASE}`, formData);
+  searchFarms(query: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/search`, query);
   }
 
-  // Hàm lấy danh sách (Search)
-  search(query: any): Observable<IPaginated<Farm>> {
-    return this.apiService.post<IPaginated<Farm>>(`${ENDPOINTS.FARM.SEARCH}`, query);
+  getFarmById(id: string | number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+  createFarm(data: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('address', data.address);
+    if(data.owner_name) formData.append('owner_name', data.owner_name);
+    if(data.contact_email) formData.append('contact_email', data.contact_email);
+    if(data.contact_phone) formData.append('contact_phone', data.contact_phone);
+    if(data.website) formData.append('website', data.website);
+    
+    return this.http.post(this.apiUrl, formData);
+  }
+
+  updateFarm(id: string | number, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, data);
+  }
+
+  deleteFarm(id: string | number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 }

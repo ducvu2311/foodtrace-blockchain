@@ -1,29 +1,29 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
-import { ApiService, ENDPOINTS } from './api.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  // Sử dụng biến apiUrl chuẩn từ environment
+  private apiUrl = `${environment.apiUrl}/api/auth`;
   private tokenKey = 'ft_token';
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  // Inject HttpClient, không phải ApiService
+  constructor(private http: HttpClient, private router: Router) {}
 
-  // 1. Đăng ký
   register(data: any): Observable<any> {
-    return this.apiService.post(`${ENDPOINTS.AUTH.REGISTER}`, data);
+    return this.http.post(`${this.apiUrl}/register`, data);
   }
 
-  // 2. Xác thực mã OTP (Backend yêu cầu bước này)
   verifyCode(email: string, code: string): Observable<any> {
-    return this.apiService.post(`${ENDPOINTS.AUTH.VERIFY_CODE}`, { email, code });
+    return this.http.post(`${this.apiUrl}/verify-code`, { email, code });
   }
 
-  // 3. Đăng nhập
   login(data: any): Observable<any> {
-    return this.apiService.post(`${ENDPOINTS.AUTH.LOGIN}`, data).pipe(
+    return this.http.post(`${this.apiUrl}/login`, data).pipe(
       tap((res: any) => {
         if (res.token) {
           localStorage.setItem(this.tokenKey, res.token);
@@ -32,14 +32,12 @@ export class AuthService {
     );
   }
 
-  // 4. Quên mật khẩu (Gửi OTP)
   forgotPassword(email: string): Observable<any> {
-    return this.apiService.post(`${ENDPOINTS.AUTH.FORGOT_PASSWORD}`, { email });
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
   }
 
-  // 5. Đặt lại mật khẩu
   resetPassword(data: any): Observable<any> {
-    return this.apiService.post(`${ENDPOINTS.AUTH.RESET_PASSWORD}`, data);
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 
   logout() {
