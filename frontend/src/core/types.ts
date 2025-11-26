@@ -20,6 +20,20 @@ export interface User {
 
 }
 
+export interface LabTest {
+  batch_id: number
+  certificate_url: string
+  created_at: Date
+  created_by: number | string
+  result: string
+  test_date: Date
+  test_id: string | number
+  test_type: string
+  tested_by: string
+  updated_at: Date
+  updated_by: string | number
+}
+
 export interface Farm {
   farm_id: number
   name: string

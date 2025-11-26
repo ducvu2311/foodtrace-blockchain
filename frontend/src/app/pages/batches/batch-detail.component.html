@@ -56,21 +56,21 @@
         </div>
       </section>
 
-      <!-- <section class="card"> -->
-      <!--   <h2>{{ 'PAGES.BATCH_DETAIL.TIMELINE' | translate }}</h2> -->
-      <!--   <ul class="simple-timeline"> -->
-      <!--     <li *ngFor="let t of timeline"> -->
-      <!--       <div class="dot"></div> -->
-      <!--       <div class="content"> -->
-      <!--         <strong>{{ t.label }}</strong> -->
-      <!--         <p class="meta"> -->
-      <!--           <span>⏱ {{ t.time }}</span> -->
-      <!--           <span>👤 {{ t.by }}</span> -->
-      <!--         </p> -->
-      <!--       </div> -->
-      <!--     </li> -->
-      <!--   </ul> -->
-      <!-- </section> -->
+      <section class="card">
+        <h2>{{ 'PAGES.BATCH_DETAIL.TIMELINE' | translate }}</h2>
+        <ul class="simple-timeline">
+          <li *ngFor="let t of timeline">
+            <div class="dot"></div>
+            <div class="content">
+              <strong>{{ t.label }}</strong>
+              <p class="meta">
+                <span>⏱ {{ t.time }}</span>
+                <span>👤 {{ t.by }}</span>
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
     </div>
   </div>
 }

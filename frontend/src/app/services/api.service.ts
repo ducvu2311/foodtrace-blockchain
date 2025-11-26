@@ -41,7 +41,7 @@ export const ENDPOINTS = {
   LAB_TEST: {
     BASE: "lab-tests",
     SEARCH: "lab-tests/search",
-    BY_BATCH_ID: (id: string | number) => `lab-tests/${id}`,
+    BY_BATCH_ID: (id: string | number) => `lab-tests/batch/${id}`,
   }
 }
 

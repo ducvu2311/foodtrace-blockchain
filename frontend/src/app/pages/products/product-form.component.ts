@@ -11,7 +11,7 @@ import { CategoryService } from '../../services/category.service';
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './product-form.component.html',
-  styles: './product-form.component.css'
+  styleUrls: ['./product-form.component.css']
 })
 export class ProductFormComponent implements OnInit {
   isEditMode = false;

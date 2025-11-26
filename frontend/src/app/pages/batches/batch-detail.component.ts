@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { BatchService } from '../../services/batches.service';
 import { BatchDetail } from '../../../core/types';
+import { LabTestService } from '../../services/labtest.service';
 
 @Component({
   selector: 'app-batch-detail',
@@ -37,39 +38,69 @@ export class BatchDetailComponent {
     created_by: null,
     updated_by: null
   };
+  //
+  // timeline: {
+  //   label: string,
+  //   time: string,
+  //   by: string
+  // }[] = []
 
-  // timeline = [
-  //   {
-  //     label: 'Tạo batch bởi Farmer',
-  //     time: '2025-10-01 08:00',
-  //     by: 'Nguyễn Văn A',
-  //   },
-  //   {
-  //     label: 'Cập nhật thông tin thu hoạch',
-  //     time: '2025-10-10 09:30',
-  //     by: 'QC Team',
-  //   },
-  //   {
-  //     label: 'Xử lý & đóng gói',
-  //     time: '2025-10-11 14:00',
-  //     by: 'Packaging Center',
-  //   },
-  //   {
-  //     label: 'Push record lên Blockchain',
-  //     time: '2025-10-11 14:05',
-  //     by: 'System',
-  //   },
-  // ];
+  timeline = [
+    {
+      label: 'Tạo batch bởi Farmer',
+      time: '2025-10-01 08:00',
+      by: 'Nguyễn Văn A',
+    },
+    {
+      label: 'Cập nhật thông tin thu hoạch',
+      time: '2025-10-10 09:30',
+      by: 'QC Team',
+    },
+    {
+      label: 'Xử lý & đóng gói',
+      time: '2025-10-11 14:00',
+      by: 'Packaging Center',
+    },
+    {
+      label: 'Push record lên Blockchain',
+      time: '2025-10-11 14:05',
+      by: 'System',
+    },
+  ];
 
   constructor(
     private route: ActivatedRoute,
     private batchService: BatchService,
+    private labTestService: LabTestService,
     private location: Location // Inject Location
   ) {
     this.id = this.route.snapshot.params['id'];
     this.batchService.detail(this.id).subscribe({
       next: (value) => {
         this.data = value.data;
+        console.log(value);
+      },
+      error: (err) => { console.log(err) },
+      complete: () => { }
+    })
+
+    this.labTestService.getByBatchId(this.id).subscribe({
+      next: (value) => {
+        this.timeline = value.data.map((v) => {
+          const date = new Date(v.created_at);
+          const time = new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          }).format(date)
+          return {
+            label: v.test_type,
+            time,
+            by: v.tested_by
+          }
+        })
         console.log(value);
       },
       error: (err) => { console.log(err) },
