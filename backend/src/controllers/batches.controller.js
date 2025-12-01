@@ -130,9 +130,9 @@ const batchesController = {
       // 5️⃣ Cập nhật DB
       await conn.query(
         `UPDATE batches 
-         SET proof_hash=?, blockchain_tx=?, blockchain_block=?, updated_by=? 
+         SET proof_hash=?, blockchain_tx=?, updated_by=? 
          WHERE batch_id=?`,
-        [proof_hash, blockchain_tx, block_number, userId, batch_id],
+        [proof_hash, blockchain_tx, userId, batch_id],
       );
 
       // 6️⃣ Upload file (nếu có)
