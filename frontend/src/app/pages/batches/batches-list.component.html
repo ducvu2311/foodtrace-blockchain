@@ -100,4 +100,29 @@
       <!-- </tr> -->
     </tbody>
   </table>
+  <!-- PAGINATION -->
+  <div class="pagination-container" *ngIf="totalPages > 1">
+    <button
+      class="page-btn"
+      [disabled]="pageIndex === 1"
+      (click)="goToPage(pageIndex - 1)">
+      ← Prev
+    </button>
+
+    <button
+      class="page-btn"
+      *ngFor="let p of pages"
+      [class.active]="pageIndex === p"
+      (click)="goToPage(p)">
+      {{ p }}
+    </button>
+
+    <button
+      class="page-btn"
+      [disabled]="pageIndex === totalPages"
+      (click)="goToPage(pageIndex + 1)">
+      Next →
+    </button>
+  </div>
+
 </div>

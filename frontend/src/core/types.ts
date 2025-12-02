@@ -108,9 +108,7 @@ export interface BatchQuery extends QueryRequest {
 
 export interface FarmQuery extends QueryRequest {
   farmName?: string,
-  province?: string,
-  district?: string,
-  ward?: string,
+  address?: string,
   farmId?: number | string
 }
 

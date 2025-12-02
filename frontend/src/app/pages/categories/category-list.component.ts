@@ -16,7 +16,7 @@ export class CategoryListComponent implements OnInit {
   categories: any[] = [];
   searchTerm = '';
   openDropdownId: any = null;
-
+  
   constructor(
     private categoryService: CategoryService,
     private router: Router

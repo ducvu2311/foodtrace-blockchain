@@ -22,8 +22,17 @@ export class BatchesListComponent implements OnInit {
   // State cho Bộ lọc
   isFilterVisible = false;
   filter = { code: '', product: '', farm: '', status: '', fromDate: '', toDate: '' };
-
+  pageIndex = 1;
+  pageSize = 20;
+  total = 0;
+  totalPages = 1;
+  pages: number[] = [];
   constructor(private batchService: BatchService) { }
+  goToPage(p: number) {
+  if (p < 1 || p > this.totalPages) return;
+  this.pageIndex = p;
+  this.loadBatches();
+}
 
   ngOnInit() { this.loadBatches(); }
 
@@ -31,8 +40,8 @@ export class BatchesListComponent implements OnInit {
 
   loadBatches() {
     const query: BatchQuery = {
-      pageIndex: 1,
-      pageSize: 20,
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
       filter: this.searchTerm,
       // Nếu bộ lọc đang mở thì lấy giá trị từ form, không thì rỗng
       batchNumber: this.isFilterVisible ? this.filter.code : '',
@@ -45,7 +54,14 @@ export class BatchesListComponent implements OnInit {
 
     this.isLoading = true;
     this.batchService.search(query).subscribe({
-      next: (value) => { this.batches = value.data },
+      next: (value) => 
+        { this.batches = value.data 
+        this.pageIndex = value.pagination.pageIndex;
+        this.pageSize = value.pagination.pageSize;
+        this.total = value.pagination.total;
+        this.totalPages = value.pagination.totalPages;
+        this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+        },
       error: (err) => { console.log(err) },
       complete: () => { this.isLoading = false; }
     });

@@ -24,7 +24,18 @@ export class ProductListComponent implements OnInit {
     private productService: ProductService,
     private router: Router
   ) { }
-
+  pageIndex = 1;
+  pageSize = 20;
+  total = 0;
+  totalPages = 1;
+  pages: number[] = [];
+  
+  goToPage(p: number) {
+    if (p < 1 || p > this.totalPages) return;
+    this.pageIndex = p;
+    this.loadProducts();
+  }
+  
   ngOnInit() {
     this.loadProducts();
   }
@@ -33,8 +44,8 @@ export class ProductListComponent implements OnInit {
 
   loadProducts() {
     const query = {
-      pageIndex: 1,
-      pageSize: 20,
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
       filter: this.searchTerm,
       name: this.isFilterVisible ? this.filter.name : '',
       // categoryId: ... nếu muốn lọc theo danh mục
@@ -44,6 +55,11 @@ export class ProductListComponent implements OnInit {
     this.productService.search(query).subscribe({
       next: (res) => {
         this.products = res.data || [];
+                this.pageIndex = res.pagination.pageIndex;
+        this.pageSize = res.pagination.pageSize;
+        this.total = res.pagination.total;
+        this.totalPages = res.pagination.totalPages;
+        this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
         console.log(res.data);
       }
     });

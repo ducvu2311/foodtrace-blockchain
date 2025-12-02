@@ -117,57 +117,41 @@ const farmController = {
 
     try {
       const pool = await getPool();
-
       const offset = (query.pageIndex - 1) * query.pageSize;
 
-      let baseQuery = `
-        FROM farms
-      `;
+      // ========== BASE QUERY ==========
+      let where = ["is_active = 1"];     // bảng dùng tinyint(1)
+      let params = [];
 
-      const where = [`is_active = TRUE`];
-      const params = [];
-
-      // ---------- Role filter ----------
+      // ------ Role filter ------
       if (role === "manufacturer") {
         where.push(`created_by = ?`);
         params.push(userId);
       }
 
-      // ---------- Generic filter (filter chung giống C#) ----------
+      // ------ Generic filter ------
       if (query.filter) {
+        const like = `%${query.filter}%`;
         where.push(`(
           name LIKE ? OR
-          province LIKE ? OR
-          district LIKE ? OR
-          ward LIKE ?
+          owner_name LIKE ? OR
+          address LIKE ? OR
+          contact_email LIKE ? OR
+          contact_phone LIKE ?
         )`);
-        params.push(
-          `%${query.filter}%`,
-          `%${query.filter}%`,
-          `%${query.filter}%`,
-          `%${query.filter}%`,
-        );
+        params.push(like, like, like, like, like);
       }
 
-      // ---------- Field filters ----------
+      // ------ Field filters ------
       if (query.farmName) {
         where.push(`name LIKE ?`);
         params.push(`%${query.farmName}%`);
       }
 
       if (query.province) {
-        where.push(`province LIKE ?`);
+        // Province nằm trong address
+        where.push(`address LIKE ?`);
         params.push(`%${query.province}%`);
-      }
-
-      if (query.district) {
-        where.push(`district LIKE ?`);
-        params.push(`%${query.district}%`);
-      }
-
-      if (query.ward) {
-        where.push(`ward LIKE ?`);
-        params.push(`%${query.ward}%`);
       }
 
       if (query.farmId) {
@@ -176,30 +160,43 @@ const farmController = {
       }
 
       // Gộp WHERE
-      if (where.length > 0) {
-        baseQuery += " WHERE " + where.join(" AND ");
-      }
+      let whereSql = where.length ? " WHERE " + where.join(" AND ") : "";
 
-      // ---------- COUNT ----------
-      const [countRows] = await pool.query(
-        `SELECT COUNT(*) AS total ${baseQuery}`,
-        params,
-      );
+      // ========== COUNT ==========
+      const countQuery = `
+        SELECT COUNT(*) AS total
+        FROM farms
+        ${whereSql}
+      `;
+      const [countRows] = await pool.query(countQuery, params);
       const total = countRows[0].total;
 
-      // ---------- SORT ----------
+      // ========== SORT CHECK ==========
+      const allowedSort = [
+        "farm_id", "name", "address", "created_at", "updated_at"
+      ];
+
+      const sortColumn = allowedSort.includes(query.sortColumn)
+        ? query.sortColumn
+        : "created_at";
+
       const order = query.sortAscending ? "ASC" : "DESC";
 
+      // ========== DATA QUERY ==========
       const dataQuery = `
         SELECT *
-        ${baseQuery}
-        ORDER BY ${query.sortColumn} ${order}
+        FROM farms
+        ${whereSql}
+        ORDER BY ${sortColumn} ${order}
         LIMIT ? OFFSET ?
       `;
 
-      const dataParams = [...params, query.pageSize, offset];
-      const [rows] = await pool.query(dataQuery, dataParams);
+      const [rows] = await pool.query(
+        dataQuery,
+        [...params, query.pageSize, offset]
+      );
 
+      // ========== RESPONSE ==========
       return res.status(200).json({
         success: true,
         pagination: {
@@ -210,6 +207,7 @@ const farmController = {
         },
         data: rows,
       });
+
     } catch (err) {
       console.error("searchFarms error:", err);
       return res.status(500).json({
@@ -218,6 +216,7 @@ const farmController = {
       });
     }
   },
+
 
   /**
    * 🔍 Xem chi tiết nông trại

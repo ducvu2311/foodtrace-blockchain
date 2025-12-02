@@ -14,6 +14,7 @@ import { Farm, FarmQuery } from '../../../core/types';
   styleUrls: ['./farms-list.component.css'],
 })
 export class FarmsListComponent implements OnInit {
+  
   searchTerm: string = '';
   farms: Farm[] = [];
   isLoading: boolean;
@@ -21,43 +22,70 @@ export class FarmsListComponent implements OnInit {
   isFilterVisible = false;
   filter = { name: '', owner: '', province: '', status: '' };
 
+  // ===== PAGINATION =====
+  pageIndex = 1;
+  pageSize = 20;
+  total = 0;
+  totalPages = 1;
+  pages: number[] = [];
+
   constructor(
     private farmService: FarmService,
     private router: Router
   ) {
     this.isLoading = true;
-    this.farmService.search(this.searchTerm).subscribe({
-      next: (value) => {
-        this.farms = value.data;
-        console.log(value)
-      },
-      error: (err) => { console.log(err) },
-      complete: () => { this.isLoading = false }
-    });
   }
 
-  ngOnInit() { this.loadFarms(); }
+  ngOnInit() { 
+    this.loadFarms(); 
+  }
 
-  toggleFilter() { this.isFilterVisible = !this.isFilterVisible; }
+  toggleFilter() { 
+    this.isFilterVisible = !this.isFilterVisible; 
+  }
 
   loadFarms() {
     const query: FarmQuery = {
-      pageIndex: 1, pageSize: 20,
+      pageIndex: this.pageIndex,
+      pageSize: this.pageSize,
       filter: this.searchTerm,
       farmName: this.isFilterVisible ? this.filter.name : '',
-      province: this.isFilterVisible ? this.filter.province : '',
-      sortColumn: 'created_at', sortAscending: false
+      address: this.isFilterVisible ? this.filter.province : '',
+      sortColumn: 'created_at',
+      sortAscending: false
     };
+
     this.farmService.search(query).subscribe({
-      next: (res) => { this.farms = res.data || []; }
+      next: (res) => { 
+        this.farms = res.data || []; 
+        
+        // === LẤY DỮ LIỆU PHÂN TRANG TỪ BACKEND ===
+        this.pageIndex = res.pagination.pageIndex;
+        this.pageSize = res.pagination.pageSize;
+        this.total = res.pagination.total;
+        this.totalPages = res.pagination.totalPages;
+
+        // Tạo danh sách các trang
+        this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+      }
     });
   }
 
-  onSearch() { this.loadFarms(); }
+  goToPage(p: number) {
+    if (p < 1 || p > this.totalPages) return;
+    this.pageIndex = p;
+    this.loadFarms();
+  }
+
+  onSearch() { 
+    this.pageIndex = 1;  // RESET VỀ TRANG 1
+    this.loadFarms(); 
+  }
 
   resetFilter() {
     this.filter = { name: '', owner: '', province: '', status: '' };
     this.searchTerm = '';
+    this.pageIndex = 1;  // RESET VỀ TRANG 1
     this.loadFarms();
   }
 
@@ -84,5 +112,7 @@ export class FarmsListComponent implements OnInit {
   }
 
   @HostListener('document:click')
-  closeMenu() { this.openDropdownId = null; }
+  closeMenu() { 
+    this.openDropdownId = null; 
+  }
 }
