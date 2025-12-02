@@ -31,13 +31,14 @@ import { CategoryFormComponent } from './pages/categories/category-form.componen
 import { TraceComponent } from './pages/trace/trace.component';
 import { ActivitiesComponent } from './pages/activities/activities.component';
 
-import { LabTestUploadComponent } from './lab-test-upload/lab-test-upload.component';
-import { FarmDocumentUploadComponent } from './farm-document-upload/farm-document-upload.component';
+import { LabTestUploadComponent } from './pages/lab-test-upload/lab-test-upload.component';
+import { FarmDocumentUploadComponent } from './pages/farm-document-upload/farm-document-upload.component';
+
 
 export const routes: Routes = [
   // --- A. ĐIỀU HƯỚNG MẶC ĐỊNH ---
   // Vào trang chủ ('') sẽ tự nhảy về trang Login
-  { path: '', pathMatch: 'full', redirectTo: 'login' },
+  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
 
   // --- B. CÁC TRANG PUBLIC (Không có Sidebar) ---
   { path: 'login', component: LoginComponent },
@@ -76,6 +77,9 @@ export const routes: Routes = [
       // 6. Chức năng khác
       { path: 'trace', component: TraceComponent },
       { path: 'activities', component: ActivitiesComponent },
+
+      { path: 'farm-document-upload', component: FarmDocumentUploadComponent },
+      { path: 'lab-test-upload', component: LabTestUploadComponent },
     ],
   },
 
@@ -83,6 +87,4 @@ export const routes: Routes = [
   // Nếu đường dẫn sai, quay về Login
   { path: '**', redirectTo: 'login' },
 
-   { path: 'lab-test-upload', component: LabTestUploadComponent },
-  { path: 'farm-document-upload', component: FarmDocumentUploadComponent }
 ];

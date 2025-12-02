@@ -9,6 +9,7 @@ import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { authInterceptor } from './interceptors/auth.interceptor';
+import { FormsModule } from '@angular/forms';
 
 /* -------------------------
    Translate Loader

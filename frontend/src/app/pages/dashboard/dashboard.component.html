@@ -22,6 +22,17 @@
         <a routerLink="/batches" routerLinkActive="active" (click)="collapseSidebarOnNavigate()"><span class="nav-icon">📦</span><span class="nav-label" *ngIf="!isSidebarCollapsed">{{ 'NAV.BATCHES' | translate }}</span></a>
         <a routerLink="/trace" routerLinkActive="active" (click)="collapseSidebarOnNavigate()"><span class="nav-icon">🔍</span><span class="nav-label" *ngIf="!isSidebarCollapsed">{{ 'NAV.TRACE' | translate }}</span></a>
         <a routerLink="/activities" routerLinkActive="active" (click)="collapseSidebarOnNavigate()"><span class="nav-icon">📝</span><span class="nav-label" *ngIf="!isSidebarCollapsed">{{ 'NAV.ACTIVITIES' | translate }}</span></a>
+
+        <a routerLink="/farm-document-upload" routerLinkActive="active" (click)="collapseSidebarOnNavigate()">
+  <span class="nav-icon">📄</span>
+  <span class="nav-label" *ngIf="!isSidebarCollapsed">{{ 'NAV.UPLOAD_FARM_DOC' | translate }}</span>
+</a>
+
+<a routerLink="/lab-test-upload" routerLinkActive="active" (click)="collapseSidebarOnNavigate()">
+  <span class="nav-icon">🧪</span>
+  <span class="nav-label" *ngIf="!isSidebarCollapsed">{{ 'NAV.UPLOAD_LAB_TEST' | translate }}</span>
+</a>
+
       </nav>
 
       <div class="sidebar-footer">

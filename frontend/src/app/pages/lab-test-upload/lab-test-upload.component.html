@@ -1,0 +1,52 @@
+<div class="upload-form">
+
+  <button class="btn-back" (click)="goBack()">
+    ← {{ 'COMMON.BACK' | translate }}
+  </button>
+
+  <h1>{{ 'UPLOAD_LAB_TEST.TITLE' | translate }}</h1>
+
+  <div class="form-group">
+    <label>{{ 'UPLOAD_LAB_TEST.BATCH_ID' | translate }} *</label>
+    <input type="number" [(ngModel)]="batchId" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>{{ 'UPLOAD_LAB_TEST.TEST_TYPE' | translate }} *</label>
+    <input type="text" [(ngModel)]="testType" class="form-control" />
+  </div>
+
+  <div class="form-group">
+    <label>{{ 'UPLOAD_LAB_TEST.FILE' | translate }} *</label>
+    <input type="file" (change)="onFileSelected($event)" />
+  </div>
+
+  <div class="button-row">
+    <button class="btn-cancel" (click)="goBack()">
+      {{ 'COMMON.CANCEL' | translate }}
+    </button>
+
+    <button class="btn-primary" (click)="uploadLabTest()" [disabled]="uploading">
+      {{ uploading ? ('UPLOAD_LAB_TEST.UPLOADING' | translate) : ('UPLOAD_LAB_TEST.UPLOAD' | translate) }}
+    </button>
+  </div>
+
+  <h2 class="section-title">{{ 'UPLOAD_LAB_TEST.HISTORY' | translate }}</h2>
+
+  <table class="history-table" *ngIf="history.length > 0">
+    <tr>
+      <th>{{ 'UPLOAD_LAB_TEST.BATCH_ID' | translate }}</th>
+      <th>{{ 'UPLOAD_LAB_TEST.TEST_TYPE' | translate }}</th>
+      <th>{{ 'UPLOAD_LAB_TEST.DATE' | translate }}</th>
+      <th>Hash</th>
+    </tr>
+
+    <tr *ngFor="let item of history">
+      <td>{{ item.batchId }}</td>
+      <td>{{ item.testType }}</td>
+      <td>{{ item.date }}</td>
+      <td>{{ item.hash }}</td>
+    </tr>
+  </table>
+
+</div>

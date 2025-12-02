@@ -1,7 +1,7 @@
 {
   "APP": { "TITLE": "Smart agriculture traceability from farm to table." },
   "NAV": {
-    "DASHBOARD": "Dashboard", "FARMS": "Farms", "BATCHES": "Batches", "PRODUCTS": "Products", "CATEGORIES": "Categories", "TRACE": "Traceability", "ACTIVITIES": "Activities", "TRANSPORT": "Transport", "DISTRIBUTION": "Distribution"
+    "DASHBOARD": "Dashboard", "FARMS": "Farms", "BATCHES": "Batches", "PRODUCTS": "Products", "CATEGORIES": "Categories", "TRACE": "Traceability", "ACTIVITIES": "Activities", "TRANSPORT": "Transport", "DISTRIBUTION": "Distribution", "UPLOAD_FARM_DOC": "Upload farm documents", "UPLOAD_LAB_TEST": "Upload lab test"
   },
   "SIDEBAR": { "ACCOUNT": "Account", "LOGOUT": "Logout" },
   "DASHBOARD": { "TITLE": "Dashboard", "WELCOME": "Live insights across your supply chain." },
@@ -56,6 +56,29 @@
     },
     "ACTIVITIES": {
       "TITLE": "Activity Log", "TH_TIME": "Time", "TH_EVENT": "Event", "TH_FARM": "Entity", "TH_STATUS": "Status"
-    }
+    },
+    "UPLOAD_FARM_DOC": {
+  "TITLE": "Upload Farm Document",
+  "FARM_ID": "Farm ID",
+  "DOC_TYPE": "Document Type",
+  "FILE": "File",
+  "UPLOAD": "Upload",
+  "UPLOADING": "Processing...",
+  "HISTORY": "Upload History"
+},
+"UPLOAD_LAB_TEST": {
+  "TITLE": "Upload Lab Test",
+  "BATCH_ID": "Batch ID",
+  "TEST_TYPE": "Test Type",
+  "FILE": "Lab File",
+  "UPLOAD": "Upload",
+  "UPLOADING": "OCR running...",
+  "HISTORY": "Lab Test History"
+},
+"COMMON": {
+  "BACK": "Back",
+  "CANCEL": "Cancel"
+}
+
   }
 }
