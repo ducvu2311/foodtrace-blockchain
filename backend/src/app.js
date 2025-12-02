@@ -21,6 +21,7 @@ app.use("/api/lab-tests", require("./routes/lab_tests.routes"));
 app.use("/api/dashboard", require("./routes/dashboard.routes"));
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 app.use("/api/media", require("./routes/media.routes"));
+app.use("/api/ocr", require("./routes/ocr.routes"));
 app.get("/", (req, res) =>
   res.json({ ok: true, env: process.env.NODE_ENV || "dev" }),
 );

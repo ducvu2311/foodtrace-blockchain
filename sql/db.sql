@@ -237,31 +237,21 @@ CREATE INDEX idx_labtests_batch ON lab_tests(batch_id);
 -- END OF SCHEMA
 -- =====================================================
 CREATE TABLE IF NOT EXISTS farm_documents (
-  doc_id INT AUTO_INCREMENT PRIMARY KEY,
-  farm_id INT NULL,
-  doc_type VARCHAR(100) NULL,
-  file_url VARCHAR(500) NOT NULL,
-  file_type VARCHAR(50) DEFAULT 'image',
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  farm_id INT NOT NULL,
+  doc_type VARCHAR(255) NOT NULL,
+  file_path VARCHAR(500) NOT NULL,
   ocr_text LONGTEXT,
-  blockchain_hash VARCHAR(128),
-  uploaded_by INT NULL,
-  uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (farm_id) REFERENCES farms(farm_id) ON DELETE SET NULL,
-  FOREIGN KEY (uploaded_by) REFERENCES users(user_id) ON DELETE SET NULL
+  hash VARCHAR(128) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- expand ENUM
-ALTER TABLE media_files 
-  CHANGE COLUMN entity_type entity_type 
-  ENUM('farm','batch','lab_test','product','license','farm_document') NOT NULL;
-
--- extend lab_tests
-ALTER TABLE lab_tests
-  ADD COLUMN certificate_file_url VARCHAR(500) NULL,
-  ADD COLUMN ocr_text LONGTEXT NULL,
-  ADD COLUMN blockchain_hash VARCHAR(128) NULL;
-
--- extend ocr_results
-ALTER TABLE ocr_results
-  ADD COLUMN source_type VARCHAR(50) NULL,
-  ADD COLUMN source_id INT NULL;
+CREATE TABLE IF NOT EXISTS lab_tests (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  batch_id INT NOT NULL,
+  doc_type VARCHAR(255) NOT NULL,
+  file_path VARCHAR(500) NOT NULL,
+  ocr_text LONGTEXT,
+  hash VARCHAR(128) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

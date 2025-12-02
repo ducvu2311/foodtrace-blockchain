@@ -1,24 +1,39 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class OcrService {
-  private baseUrl = 'http://localhost:3000/api/ocr';
+
+  private apiUrl = 'http://localhost:3000/api/ocr';
 
   constructor(private http: HttpClient) {}
 
-  uploadLab(file: File, batchId?: number) {
-    const fd = new FormData();
-    fd.append('file', file);
-    if (batchId) fd.append('batch_id', String(batchId));
-    return this.http.post(`${this.baseUrl}/lab/upload`, fd);
+  // FARM OCR
+  ocrFarmDocument(farmId: number, docType: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('farmId', farmId.toString());
+    formData.append('docType', docType);
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/farm-document`, formData);
   }
 
-  uploadFarm(file: File, farmId?: number, docType?: string) {
-    const fd = new FormData();
-    fd.append('file', file);
-    if (farmId) fd.append('farm_id', String(farmId));
-    if (docType) fd.append('doc_type', docType);
-    return this.http.post(`${this.baseUrl}/farm/upload`, fd);
+  getFarmDocumentHistory(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/farm-document/history`);
+  }
+
+  // LAB OCR
+  ocrLabTest(batchId: number, docType: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('batchId', batchId.toString());
+    formData.append('docType', docType);
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/lab-test`, formData);
+  }
+
+  getLabTestHistory(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/lab-test/history`);
   }
 }

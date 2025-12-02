@@ -1,0 +1,61 @@
+.page-wrapper {
+  padding: 20px;
+}
+
+.page-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.page-subtitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 25px 0 10px 0;
+}
+
+.form-card {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e3e3e3;
+  margin-bottom: 25px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid #d4d4d4;
+  padding: 10px;
+}
+
+.btn-primary {
+  background: #0d9f6e;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+}
+
+.table th,
+.table td {
+  border-bottom: 1px solid #ececec;
+  padding: 10px;
+}

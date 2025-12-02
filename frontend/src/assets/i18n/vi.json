@@ -9,7 +9,9 @@
     "TRACE": "Truy xuất",
     "ACTIVITIES": "Hoạt động",
     "TRANSPORT": "Vận chuyển",
-    "DISTRIBUTION": "Phân phối"
+    "DISTRIBUTION": "Phân phối",
+    "UPLOAD_FARM_DOC": "Tải giấy tờ nông trại",
+    "UPLOAD_LAB_TEST": "Tải kết quả xét nghiệm"
   },
   "SIDEBAR": { "ACCOUNT": "Tài khoản", "LOGOUT": "Đăng xuất" },
   "DASHBOARD": { "TITLE": "Bảng điều khiển", "WELCOME": "Tổng quan chuỗi cung ứng nông sản." },
@@ -70,6 +72,29 @@
     },
     "ACTIVITIES": {
       "TITLE": "Nhật ký Hoạt động", "TH_TIME": "Thời gian", "TH_EVENT": "Sự kiện", "TH_FARM": "Đơn vị", "TH_STATUS": "Trạng thái"
-    }
+    },
+    "UPLOAD_FARM_DOC": {
+  "TITLE": "Tải tài liệu nông trại",
+  "FARM_ID": "ID nông trại",
+  "DOC_TYPE": "Loại tài liệu",
+  "FILE": "Tệp",
+  "UPLOAD": "Upload",
+  "UPLOADING": "Đang xử lý...",
+  "HISTORY": "Lịch sử tài liệu"
+},
+"UPLOAD_LAB_TEST": {
+  "TITLE": "Tải kết quả xét nghiệm",
+  "BATCH_ID": "ID lô hàng",
+  "TEST_TYPE": "Loại xét nghiệm",
+  "FILE": "Tệp xét nghiệm",
+  "UPLOAD": "Upload",
+  "UPLOADING": "Đang OCR...",
+  "HISTORY": "Lịch sử xét nghiệm"
+},
+"COMMON": {
+  "BACK": "Quay lại",
+  "CANCEL": "Hủy"
+}
+
   }
 }
