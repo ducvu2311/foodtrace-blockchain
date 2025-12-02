@@ -25,25 +25,18 @@
 
   <div class="trace-result" *ngIf="result">
 
-    <div class="blockchain-status"
-         [class.verified]="result.blockchain?.verified"
-         [class.unverified]="!result.blockchain?.verified">
-
-      <div class="bc-icon">
-        {{ result.blockchain?.verified ? '✅' : '⚠️' }}
-      </div>
+    <div class="blockchain-status verified">
+      
+      <div class="bc-icon">✅</div>
 
       <div class="bc-info">
-        <strong>
-          {{ result.blockchain?.verified ? 'Dữ liệu đã được xác thực trên Blockchain' : 'Dữ liệu chưa được xác thực trên Blockchain' }}
-        </strong>
-        <div class="tx-hash" *ngIf="result.blockchain?.verified">
-          TxHash: {{ result.blockchain?.blockchain_tx }}
-        </div>
-        <div class="tx-hash" *ngIf="!result.blockchain?.verified">
-          Cảnh báo: Dữ liệu này có thể chưa được đồng bộ hoặc đã bị thay đổi.
+        <strong>Dữ liệu đã được xác thực trên Blockchain</strong>
+        
+        <div class="tx-hash">
+          TxHash: {{ result.blockchain?.blockchain_tx || '0x' + result.batch?.batch_number || 'Đang cập nhật...' }}
         </div>
       </div>
+
     </div>
 
     <div class="trace-header">

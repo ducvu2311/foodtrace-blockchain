@@ -31,6 +31,9 @@ import { CategoryFormComponent } from './pages/categories/category-form.componen
 import { TraceComponent } from './pages/trace/trace.component';
 import { ActivitiesComponent } from './pages/activities/activities.component';
 
+import { LabTestUploadComponent } from './lab-test-upload/lab-test-upload.component';
+import { FarmDocumentUploadComponent } from './farm-document-upload/farm-document-upload.component';
+
 export const routes: Routes = [
   // --- A. ĐIỀU HƯỚNG MẶC ĐỊNH ---
   // Vào trang chủ ('') sẽ tự nhảy về trang Login
@@ -79,4 +82,7 @@ export const routes: Routes = [
   // --- D. XỬ LÝ LỖI ---
   // Nếu đường dẫn sai, quay về Login
   { path: '**', redirectTo: 'login' },
+
+   { path: 'lab-test-upload', component: LabTestUploadComponent },
+  { path: 'farm-document-upload', component: FarmDocumentUploadComponent }
 ];

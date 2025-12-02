@@ -32,7 +32,7 @@
     },
     "BATCHES": {
       "TITLE": "Batches Management", "SUBTITLE": "Manage batches as the core of the system.", "BTN_IMPORT": "Import Excel", "BTN_CREATE": "Create Batch",
-      "TH_ID": "ID", "TH_CODE": "Batch Code", "TH_PRODUCT": "Product", "TH_FARM": "Farm", "TH_STATUS": "Status", "TH_CREATED": "Created At"
+      "TH_ID": "ID", "TH_CODE": "Batch Code", "TH_PRODUCT": "Product", "TH_FARM": "Farm", "TH_STATUS": "Status", "TH_CREATED": "Created At", "BTN_TRACE": "Trace"
     },
     "BATCH_DETAIL": {
       "TITLE": "Batch Details", "SUBTITLE": "Detailed info & timeline for batch", "INFO": "Batch Information", "TIMELINE": "Timeline",

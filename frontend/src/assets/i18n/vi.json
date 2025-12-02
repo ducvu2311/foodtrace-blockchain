@@ -46,7 +46,7 @@
     },
     "BATCHES": {
       "TITLE": "Quản lý Lô hàng", "SUBTITLE": "Quản lý các lô hàng là trung tâm của hệ thống.", "BTN_IMPORT": "Nhập từ Excel", "BTN_CREATE": "Tạo lô hàng",
-      "TH_ID": "ID", "TH_CODE": "Mã lô", "TH_PRODUCT": "Sản phẩm", "TH_FARM": "Nông trại", "TH_STATUS": "Trạng thái", "TH_CREATED": "Ngày tạo"
+      "TH_ID": "ID", "TH_CODE": "Mã lô", "TH_PRODUCT": "Sản phẩm", "TH_FARM": "Nông trại", "TH_STATUS": "Trạng thái", "TH_CREATED": "Ngày tạo", "BTN_TRACE": "Truy xuất"
     },
     "BATCH_DETAIL": {
       "TITLE": "Chi tiết lô hàng", "SUBTITLE": "Thông tin chi tiết & timeline của lô hàng", "INFO": "Thông tin lô hàng", "TIMELINE": "Dòng thời gian",

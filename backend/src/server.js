@@ -8,3 +8,5 @@ loadInitialSearchIndex();
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+const ocrRoutes = require('./routes/ocr.routes');
+app.use('/api/ocr', ocrRoutes);

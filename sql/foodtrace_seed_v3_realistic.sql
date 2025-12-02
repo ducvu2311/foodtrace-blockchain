@@ -8,7 +8,7 @@ INSERT INTO categories (name, description) VALUES ('Đồ uống', 'Cà phê, tr
 INSERT INTO categories (name, description) VALUES ('Hạt & quả khô', 'Hạt điều, mắc ca, đậu phộng');
 INSERT INTO categories (name, description) VALUES ('Cây công nghiệp', 'Cà phê, hồ tiêu, cao su');
 INSERT INTO categories (name, description) VALUES ('Sản phẩm chế biến', 'Đồ hộp, mứt, nước mắm, sữa chua');
-INSERT INTO users (username, email, password_hash, role, full_name, phone, address) VALUES ('admin_foodtrace', 'admin@foodtrace.vn', 'hashed_pw_admin', 'admin', 'Phạm Quốc Dũng', '0912345678', 'Hà Nội');
+INSERT INTO users (username, email, password_hash, role, full_name, phone, address, is_verified) VALUES ('admin_foodtrace', 'hoangducvu2311@gmail.com', '$2b$10$i3M8LmACfwNd6ftba12YMuQdK4vBfnGZXWPvUfNwPbWRX/dxJ6xga', 'admin', 'Phạm Quốc Dũng', '0912345678', 'Hà Nội','1');
 INSERT INTO users (username, email, password_hash, role, full_name, phone, address) VALUES ('le_anh_khoa', 'khoa@nongsanxanh.vn', 'hashed_pw1', 'manufacturer', 'Lê Anh Khoa', '0934567890', 'Đà Lạt');
 INSERT INTO users (username, email, password_hash, role, full_name, phone, address) VALUES ('tran_binh', 'binh@camau.vn', 'hashed_pw2', 'manufacturer', 'Trần Thanh Bình', '0978112233', 'Cà Mau');
 INSERT INTO users (username, email, password_hash, role, full_name, phone, address) VALUES ('ngoc_anh', 'anh@trace.vn', 'hashed_pw3', 'user', 'Trần Ngọc Anh', '0968776655', 'Hồ Chí Minh');

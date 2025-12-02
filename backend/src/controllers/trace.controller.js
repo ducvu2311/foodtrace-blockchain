@@ -22,16 +22,6 @@ const traceController = {
     try {
       // 1️⃣ Lấy batch + product
       const [rows] = await pool.query(
-        // -- OLD
-        //   `
-        //   SELECT
-        //     b.batch_id, b.batch_number, b.production_date, b.expiry_date,
-        //     b.proof_hash, b.blockchain_tx, b.blockchain_block,
-        //     p.name AS product_name, p.description AS product_description
-        //   FROM batches b
-        //   LEFT JOIN products p ON b.product_id = p.product_id
-        //   WHERE b.batch_number = ?
-        // `,
         `
         SELECT 
           b.batch_id, b.batch_number, b.production_date, b.expiry_date, b.proof_hash, b.blockchain_tx,
@@ -44,10 +34,12 @@ const traceController = {
         [batch_number],
       );
 
-      if (!rows.lengh)
+      // ✅ Đã sửa lỗi chính tả: rows.length
+      if (!rows || rows.length === 0) {
         return res
           .status(404)
           .json({ success: false, error: "Không tìm thấy lô hàng" });
+      }
 
       const batch = rows[0];
 
@@ -64,21 +56,22 @@ const traceController = {
 
       // 3️⃣ Ghi log quét QR (nếu có)
       try {
-        const { user } = req;
+        const { user } = req; // user có thể undefined nếu không đăng nhập
         const userId = user?.userId || null;
         const device_info = req.headers["user-agent"] || "Unknown device";
         const location = req.query.location || "Unknown";
 
+        // Lấy QR ID tương ứng với batch để ghi log
         await pool.query(
           `INSERT INTO scan_logs (user_id, qr_id, device_info, location)
-           VALUES (?, ?, ?, ?)`,
+           VALUES (?, (SELECT qr_id FROM qr_codes WHERE batch_id = ? LIMIT 1), ?, ?)`,
           [userId, batch.batch_id, device_info, location],
         );
       } catch (logErr) {
-        console.warn("⚠️ Không thể ghi log QR scan:", logErr.message);
+        console.warn("⚠️ Không thể ghi log QR scan (không ảnh hưởng luồng chính):", logErr.message);
       }
 
-      // ✅ Trả về dữ liệu gọn (chỉ phần cần hiển thị ban đầu)
+      // ✅ Trả về dữ liệu gọn
       res.status(200).json({
         success: true,
         data: {
@@ -117,7 +110,7 @@ const traceController = {
     const pool = await getPool();
 
     try {
-      // Lấy thông tin cơ bản để xác định batch_id, farm_id, v.v.
+      // Lấy thông tin cơ bản để xác định batch_id, farm_id
       const [batches] = await pool.query(
         `
         SELECT b.batch_id, b.product_id, b.batch_number, b.production_date,
@@ -170,18 +163,26 @@ const traceController = {
       );
 
       // Blockchain xác minh
-      let blockchainResult = await contractService.getBatchHash(batch);
+      let blockchainResult = {};
+      try {
+          // ✅ Đã sửa lỗi: Chỉ truyền ID (số), không truyền cả object batch
+          blockchainResult = await contractService.getBatchHash(batch.batch_id); 
+      } catch (bcError) {
+          console.warn("⚠️ Lỗi kết nối Blockchain (vẫn trả về dữ liệu DB):", bcError.message);
+          blockchainResult = { verified: false, error: "Không thể kết nối Blockchain" };
+      }
 
       res.status(200).json({
         success: true,
         data: {
           farm: farmRows[0] || null,
           media_files: mediaFiles,
-          product: product[0],
+          product: product[0] || {},
           batch: batch,
+          // Kết hợp kết quả xác thực và TxHash từ DB để Frontend hiển thị
           blockchain: {
             ...blockchainResult,
-            blockchain_tx: batch.blockchain_tx,
+            blockchain_tx: batch.blockchain_tx, 
           },
         },
       });

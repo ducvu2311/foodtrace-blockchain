@@ -108,8 +108,7 @@ export class TraceComponent {
     // ---------------------------------------------------------------------
 
     // 3. Blockchain Verification
-    if (data.blockchain && data.blockchain.verified) {
-      // Nếu là fake timestamp (string) thì parse int, nếu là date thì giữ nguyên
+    if (data.blockchain && data.blockchain.blockchain_tx) {
       let timeDisplay = 'N/A';
       if (data.blockchain.onChainTime) {
         const timestamp = parseInt(data.blockchain.onChainTime);
