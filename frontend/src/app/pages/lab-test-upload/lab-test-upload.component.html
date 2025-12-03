@@ -1,51 +1,51 @@
-<div class="upload-form">
+<div class="page-container">
 
-  <button class="btn-back" (click)="goBack()">
-    ← {{ 'COMMON.BACK' | translate }}
-  </button>
-
-  <h1>{{ 'UPLOAD_LAB_TEST.TITLE' | translate }}</h1>
-
-  <div class="form-group">
-    <label>{{ 'UPLOAD_LAB_TEST.BATCH_ID' | translate }} *</label>
-    <input type="number" [(ngModel)]="batchId" class="form-control" />
+  <div class="top-header">
+    <button class="btn-back" (click)="goBack()">← {{ 'COMMON.BACK' | translate }}</button>
+    <h1 class="page-title">{{ 'LAB_TEST.TITLE' | translate }}</h1>
   </div>
 
-  <div class="form-group">
-    <label>{{ 'UPLOAD_LAB_TEST.TEST_TYPE' | translate }} *</label>
-    <input type="text" [(ngModel)]="testType" class="form-control" />
+  <div class="form-card">
+
+      <div class="form-group">
+        <label>{{ 'LAB_TEST.BATCH_ID' | translate }} *</label>
+        <input type="number" [(ngModel)]="batchId" class="input-box">
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'LAB_TEST.TEST_TYPE' | translate }} *</label>
+        <input type="text" [(ngModel)]="testType" class="input-box">
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'LAB_TEST.FILE' | translate }} *</label>
+        <input type="file" (change)="onFileSelected($event)" class="file-input">
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-cancel" (click)="goBack()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+
+        <button class="btn-primary" (click)="uploadLabTest()" [disabled]="loading">
+          {{ loading ? ('LAB_TEST.UPLOADING' | translate) : ('LAB_TEST.UPLOAD' | translate) }}
+        </button>
+      </div>
+
   </div>
 
-  <div class="form-group">
-    <label>{{ 'UPLOAD_LAB_TEST.FILE' | translate }} *</label>
-    <input type="file" (change)="onFileSelected($event)" />
-  </div>
+  <h2 class="section-title">{{ 'LAB_TEST.HISTORY' | translate }}</h2>
 
-  <div class="button-row">
-    <button class="btn-cancel" (click)="goBack()">
-      {{ 'COMMON.CANCEL' | translate }}
-    </button>
-
-    <button class="btn-primary" (click)="uploadLabTest()" [disabled]="uploading">
-      {{ uploading ? ('UPLOAD_LAB_TEST.UPLOADING' | translate) : ('UPLOAD_LAB_TEST.UPLOAD' | translate) }}
-    </button>
-  </div>
-
-  <h2 class="section-title">{{ 'UPLOAD_LAB_TEST.HISTORY' | translate }}</h2>
-
-  <table class="history-table" *ngIf="history.length > 0">
+  <table *ngIf="history.length > 0" class="history-table">
     <tr>
-      <th>{{ 'UPLOAD_LAB_TEST.BATCH_ID' | translate }}</th>
-      <th>{{ 'UPLOAD_LAB_TEST.TEST_TYPE' | translate }}</th>
-      <th>{{ 'UPLOAD_LAB_TEST.DATE' | translate }}</th>
-      <th>Hash</th>
+      <th>{{ 'LAB_TEST.BATCH_ID' | translate }}</th>
+      <th>{{ 'LAB_TEST.TEST_TYPE' | translate }}</th>
+      <th>{{ 'LAB_TEST.DATE' | translate }}</th>
     </tr>
-
     <tr *ngFor="let item of history">
       <td>{{ item.batchId }}</td>
       <td>{{ item.testType }}</td>
       <td>{{ item.date }}</td>
-      <td>{{ item.hash }}</td>
     </tr>
   </table>
 

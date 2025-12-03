@@ -1,54 +1,77 @@
 .page-container {
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
   padding: 20px;
 }
 
-.title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 20px;
+.top-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
 }
 
-.card {
+.page-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.form-card {
   background: white;
+  padding: 25px;
   border-radius: 12px;
-  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   margin-bottom: 30px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .form-group {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 18px;
 }
 
-.form-control {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+label {
+  margin-bottom: 6px;
+  font-weight: 500;
 }
 
-.actions {
+.input-box,
+.file-input {
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #d5d5d5;
+  border-radius: 8px;
+}
+
+.action-buttons {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 20px;
 }
 
-.btn-primary {
+.btn-cancel {
+  background: white;
+  border: 1px solid #d5d5d5;
+  border-radius: 6px;
   padding: 10px 18px;
-  border-radius: 8px;
-  background: #1ab366;
-  border: none;
-  color: white;
-  font-weight: 600;
+  cursor: pointer;
 }
 
-.btn-cancel {
-  padding: 10px 18px;
-  border-radius: 8px;
-  background: #e0e0e0;
+.btn-primary {
+  background: #2ecc71;
+  color: white;
   border: none;
-  color: black;
+  border-radius: 6px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.section-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .history-table {
@@ -56,7 +79,8 @@
   border-collapse: collapse;
 }
 
-.history-table th, .history-table td {
-  padding: 10px;
+.history-table th,
+.history-table td {
   border-bottom: 1px solid #ddd;
+  padding: 10px;
 }

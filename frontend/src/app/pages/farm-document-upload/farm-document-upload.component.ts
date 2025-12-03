@@ -1,55 +1,51 @@
 import { Component } from '@angular/core';
-import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LangService, LangCode } from '../../services/language.service';
 
 @Component({
   selector: 'app-farm-document-upload',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
   templateUrl: './farm-document-upload.component.html',
-  styleUrls: ['./farm-document-upload.component.css']
+  styleUrls: ['./farm-document-upload.component.css'],
+  imports: [CommonModule, FormsModule, TranslateModule]
 })
 export class FarmDocumentUploadComponent {
-
-  farmId: number = 0;
-  docType: string = '';
+  farmId = 0;
+  docType = '';
   file: File | null = null;
-  uploading: boolean = false;
+  loading = false;
+  history: any[] = [];
 
-  history: {
-    farmId: number;
-    docType: string;
-    date: string;
-    hash: string;
-  }[] = [];
-
-  constructor(private location: Location) {}
+  constructor(private router: Router, private translate: TranslateService, private lang: LangService) {}
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/dashboard']);
+  }
+
+  changeLang(lang: LangCode) {
+    this.lang.setLanguage(lang);
   }
 
   onFileSelected(event: any) {
     this.file = event.target.files[0];
   }
 
-  uploadFarmDocument() {
-    if (!this.file || !this.docType || !this.farmId) return;
-    this.uploading = true;
+  uploadFarmDoc() {
+    if (!this.file) return;
+    this.loading = true;
 
     setTimeout(() => {
+      this.loading = false;
+
       this.history.push({
         farmId: this.farmId,
         docType: this.docType,
-        date: new Date().toLocaleString(),
-        hash: Math.random().toString(16).substring(2, 10)
+        fileName: this.file!.name,
+        date: new Date().toISOString()
       });
-
-      this.uploading = false;
-      this.file = null;
-      this.docType = '';
-    }, 1200);
+    }, 1000);
   }
 }
