@@ -56,29 +56,25 @@
     },
     "ACTIVITIES": {
       "TITLE": "Activity Log", "TH_TIME": "Time", "TH_EVENT": "Event", "TH_FARM": "Entity", "TH_STATUS": "Status"
-    },
-    "UPLOAD_FARM_DOC": {
-  "TITLE": "Upload Farm Document",
-  "FARM_ID": "Farm ID",
-  "DOC_TYPE": "Document Type",
-  "FILE": "File",
-  "UPLOAD": "Upload",
-  "UPLOADING": "Processing...",
-  "HISTORY": "Upload History"
-},
-"UPLOAD_LAB_TEST": {
-  "TITLE": "Upload Lab Test",
+    }
+  },
+  "LAB_TEST": {
+  "TITLE": "Upload laboratory test results",
   "BATCH_ID": "Batch ID",
-  "TEST_TYPE": "Test Type",
-  "FILE": "Lab File",
+  "TEST_TYPE": "Test type",
+  "FILE": "Choose file",
+  "UPLOADING": "Uploading...",
   "UPLOAD": "Upload",
-  "UPLOADING": "OCR running...",
-  "HISTORY": "Lab Test History"
+  "HISTORY": "Upload history"
 },
-"COMMON": {
-  "BACK": "Back",
-  "CANCEL": "Cancel"
+"FARM_DOC": {
+  "TITLE": "Upload farm documents",
+  "FARM_ID": "Farm ID",
+  "DOC_TYPE": "Document type",
+  "FILE": "Choose file",
+  "UPLOADING": "Uploading...",
+  "UPLOAD": "Upload",
+  "HISTORY": "Upload history"
 }
 
-  }
 }

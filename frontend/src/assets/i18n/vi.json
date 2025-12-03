@@ -72,29 +72,25 @@
     },
     "ACTIVITIES": {
       "TITLE": "Nhật ký Hoạt động", "TH_TIME": "Thời gian", "TH_EVENT": "Sự kiện", "TH_FARM": "Đơn vị", "TH_STATUS": "Trạng thái"
-    },
-    "UPLOAD_FARM_DOC": {
-  "TITLE": "Tải tài liệu nông trại",
+    }
+  },
+  "LAB_TEST": {
+  "TITLE": "Tải lên kết quả kiểm nghiệm",
+  "BATCH_ID": "Mã lô hàng",
+  "TEST_TYPE": "Loại kiểm nghiệm",
+  "FILE": "Chọn tệp",
+  "UPLOADING": "Đang tải lên...",
+  "UPLOAD": "Tải lên",
+  "HISTORY": "Lịch sử tải lên"
+},
+"FARM_DOC": {
+  "TITLE": "Tải lên giấy tờ nông trại",
   "FARM_ID": "ID nông trại",
-  "DOC_TYPE": "Loại tài liệu",
-  "FILE": "Tệp",
-  "UPLOAD": "Upload",
-  "UPLOADING": "Đang xử lý...",
-  "HISTORY": "Lịch sử tài liệu"
-},
-"UPLOAD_LAB_TEST": {
-  "TITLE": "Tải kết quả xét nghiệm",
-  "BATCH_ID": "ID lô hàng",
-  "TEST_TYPE": "Loại xét nghiệm",
-  "FILE": "Tệp xét nghiệm",
-  "UPLOAD": "Upload",
-  "UPLOADING": "Đang OCR...",
-  "HISTORY": "Lịch sử xét nghiệm"
-},
-"COMMON": {
-  "BACK": "Quay lại",
-  "CANCEL": "Hủy"
+  "DOC_TYPE": "Loại giấy tờ",
+  "FILE": "Chọn tệp",
+  "UPLOADING": "Đang tải lên...",
+  "UPLOAD": "Tải lên",
+  "HISTORY": "Lịch sử tải lên"
 }
 
-  }
 }

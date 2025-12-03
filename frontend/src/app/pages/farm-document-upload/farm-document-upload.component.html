@@ -1,51 +1,51 @@
-<div class="upload-form">
+<div class="page-container">
 
-  <button class="btn-back" (click)="goBack()">
-    ← {{ 'COMMON.BACK' | translate }}
-  </button>
-
-  <h1>{{ 'UPLOAD_FARM_DOC.TITLE' | translate }}</h1>
-
-  <div class="form-group">
-    <label>{{ 'UPLOAD_FARM_DOC.FARM_ID' | translate }} *</label>
-    <input type="number" [(ngModel)]="farmId" class="form-control" />
+  <div class="top-header">
+    <button class="btn-back" (click)="goBack()">← {{ 'COMMON.BACK' | translate }}</button>
+    <h1 class="page-title">{{ 'FARM_DOC.TITLE' | translate }}</h1>
   </div>
 
-  <div class="form-group">
-    <label>{{ 'UPLOAD_FARM_DOC.DOC_TYPE' | translate }} *</label>
-    <input type="text" [(ngModel)]="docType" class="form-control" />
+  <div class="form-card">
+
+      <div class="form-group">
+        <label>{{ 'FARM_DOC.FARM_ID' | translate }} *</label>
+        <input type="number" [(ngModel)]="farmId" class="input-box">
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'FARM_DOC.DOC_TYPE' | translate }} *</label>
+        <input type="text" [(ngModel)]="docType" class="input-box">
+      </div>
+
+      <div class="form-group">
+        <label>{{ 'FARM_DOC.FILE' | translate }} *</label>
+        <input type="file" (change)="onFileSelected($event)" class="file-input">
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-cancel" (click)="goBack()">
+          {{ 'COMMON.CANCEL' | translate }}
+        </button>
+
+        <button class="btn-primary" (click)="uploadFarmDoc()" [disabled]="loading">
+          {{ loading ? ('FARM_DOC.UPLOADING' | translate) : ('FARM_DOC.UPLOAD' | translate) }}
+        </button>
+      </div>
+
   </div>
 
-  <div class="form-group">
-    <label>{{ 'UPLOAD_FARM_DOC.FILE' | translate }} *</label>
-    <input type="file" (change)="onFileSelected($event)" />
-  </div>
+  <h2 class="section-title">{{ 'FARM_DOC.HISTORY' | translate }}</h2>
 
-  <div class="button-row">
-    <button class="btn-cancel" (click)="goBack()">
-      {{ 'COMMON.CANCEL' | translate }}
-    </button>
-
-    <button class="btn-primary" (click)="uploadFarmDocument()" [disabled]="uploading">
-      {{ uploading ? ('UPLOAD_FARM_DOC.UPLOADING' | translate) : ('UPLOAD_FARM_DOC.UPLOAD' | translate) }}
-    </button>
-  </div>
-
-  <h2 class="section-title">{{ 'UPLOAD_FARM_DOC.HISTORY' | translate }}</h2>
-
-  <table class="history-table" *ngIf="history.length > 0">
+  <table *ngIf="history.length > 0" class="history-table">
     <tr>
-      <th>{{ 'UPLOAD_FARM_DOC.FARM_ID' | translate }}</th>
-      <th>{{ 'UPLOAD_FARM_DOC.DOC_TYPE' | translate }}</th>
-      <th>{{ 'UPLOAD_FARM_DOC.DATE' | translate }}</th>
-      <th>Hash</th>
+      <th>{{ 'FARM_DOC.FARM_ID' | translate }}</th>
+      <th>{{ 'FARM_DOC.DOC_TYPE' | translate }}</th>
+      <th>{{ 'FARM_DOC.DATE' | translate }}</th>
     </tr>
-
     <tr *ngFor="let item of history">
       <td>{{ item.farmId }}</td>
       <td>{{ item.docType }}</td>
       <td>{{ item.date }}</td>
-      <td>{{ item.hash }}</td>
     </tr>
   </table>
 

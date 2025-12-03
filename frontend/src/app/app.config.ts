@@ -2,61 +2,51 @@ import { ApplicationConfig, importProvidersFrom, APP_INITIALIZER } from '@angula
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 
-import { HttpClientModule, HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { authInterceptor } from './interceptors/auth.interceptor';
-import { FormsModule } from '@angular/forms';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
-/* -------------------------
-   Translate Loader
-------------------------- */
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+  return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
 }
 
-/* -------------------------
-   App Initializer
-------------------------- */
-export function initializeApp(translate: TranslateService) {
+export function initializeApp(langService: LangService) {
   return () => {
-    translate.setDefaultLang('vi');
+    langService.setLanguage(langService.getLanguage());
     return Promise.resolve();
   };
 }
 
-/* ==========================================================
-   ✔ FINAL — HỢP NHẤT & SỬA LỖI TRÙNG appConfig
-   (KHÔNG còn redeclare, đầy đủ tất cả providers)
-========================================================== */
+import { LangService } from './services/language.service';
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
 
-    // HttpClient + Interceptors
     provideHttpClient(withInterceptors([authInterceptor])),
 
-    // MODULE IMPORTS (Translate + HttpClientModule)
     importProvidersFrom(
       HttpClientModule,
       TranslateModule.forRoot({
+        defaultLanguage: 'vi',
         loader: {
           provide: TranslateLoader,
           useFactory: HttpLoaderFactory,
-          deps: [HttpClient],
+          deps: [HttpClient]
         }
       })
     ),
 
-    // APP INITIALIZER (khởi tạo ngôn ngữ)
     {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,
-      deps: [TranslateService],
+      deps: [LangService],
       multi: true
     },
   ],

@@ -1,34 +1,43 @@
 import { Component } from '@angular/core';
-import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { LangService, LangCode } from '../../services/language.service';
+
+interface LabTestHistory {
+  batchId: number;
+  testType: string;
+  fileName: string;
+  date: string;
+}
 
 @Component({
   selector: 'app-lab-test-upload',
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslateModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    TranslateModule
+  ],
   templateUrl: './lab-test-upload.component.html',
   styleUrls: ['./lab-test-upload.component.css']
 })
 export class LabTestUploadComponent {
-
   batchId: number = 0;
   testType: string = '';
   file: File | null = null;
-  uploading: boolean = false;
+  loading = false;
+  history: LabTestHistory[] = [];
 
-  history: {
-    batchId: number;
-    testType: string;
-    date: string;
-    hash: string;
-  }[] = [];
-
-  constructor(private location: Location) {}
+  constructor(private router: Router, private translate: TranslateService, private lang: LangService) {}
 
   goBack() {
-    this.location.back();
+    this.router.navigate(['/dashboard']);
+  }
+
+  changeLang(lang: LangCode) {
+    this.lang.setLanguage(lang);
   }
 
   onFileSelected(event: any) {
@@ -36,21 +45,18 @@ export class LabTestUploadComponent {
   }
 
   uploadLabTest() {
-    if (!this.file || !this.testType || !this.batchId) return;
-    this.uploading = true;
+    if (!this.file) return;
+    this.loading = true;
 
     setTimeout(() => {
+      this.loading = false;
+
       this.history.push({
         batchId: this.batchId,
         testType: this.testType,
-        date: new Date().toLocaleString(),
-        hash: Math.random().toString(16).substring(2, 10)
+        fileName: this.file!.name,
+        date: new Date().toISOString()
       });
-
-      this.uploading = false;
-      this.file = null;
-      this.testType = '';
-    }, 1200);
+    }, 1000);
   }
-
 }
