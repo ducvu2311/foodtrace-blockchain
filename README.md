@@ -1,4 +1,5 @@
-thành viên:
+# Đề tài: web truy xuất nguoonf gốc nông sản sử dụng Key Management – lưu khóa bí mật hardcoded trong code (vulnerable), và fix bằng Vault/KMS/ENV secrets.
+Thành viên:
 - Dương Hoàng Sơn: thiết kế backend
 - Hoàng Đức Vũ: thiết kế frontend
 
