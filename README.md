@@ -56,12 +56,16 @@ giao diện quản lý lô hàng
 <img width="562" height="547" alt="image" src="https://github.com/user-attachments/assets/6d372b2b-7c0a-4093-a19b-27925100d108" />
 
 trạng thái lô hàng
+<img width="562" height="547" alt="image" src="https://github.com/user-attachments/assets/20451e08-00f7-43ad-a82e-a39eeca90c60" />
+
+truy xuất lô hàng
 <img width="634" height="155" alt="image" src="https://github.com/user-attachments/assets/61a201de-59c1-443a-9bff-a594b704c575" />
 
 
 demo key management:
 
 nội dung file .evn
+
 <img width="352" height="369" alt="Screenshot 2025-12-08 134927" src="https://github.com/user-attachments/assets/ef3ccbe7-0463-4f5e-bfec-054dbc6a57ab" />
 
 F12 (Network/Console) khi hệ thống hoạt động bình thường
