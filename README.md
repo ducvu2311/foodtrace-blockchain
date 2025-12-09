@@ -64,6 +64,8 @@ giao diện quản lý sản phẩm
 <img width="616" height="301" alt="image" src="https://github.com/user-attachments/assets/c348b1ab-15ab-4a9b-8436-1a53926792aa" />
 
 giao diện quản lý lô hàng
+
+
 <img width="562" height="547" alt="image" src="https://github.com/user-attachments/assets/6d372b2b-7c0a-4093-a19b-27925100d108" />
 
 trạng thái lô hàng
