@@ -1,4 +1,8 @@
-# Cách chạy dự án
+thành viên:
+- Dương Hoàng Sơn: thiết kế backend
+- Hoàng Đức Vũ: thiết kế frontend
+
+Cách chạy dự án
 Yêu cầu:
 docker, docker-compose
 nodejs
@@ -31,10 +35,6 @@ npm install
 npm run start
 ```
 lưu ý: tạo tài khoản và dùng với quyền admin
-
-thành viên:
-- Dương Hoàng Sơn: thiết kế backend
-- Hoàng Đức Vũ: thiết kế frontend
 
 demo web:
 
