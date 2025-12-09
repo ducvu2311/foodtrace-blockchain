@@ -58,7 +58,9 @@ giao diện quản lý lô hàng
 trạng thái lô hàng
 <img width="634" height="155" alt="image" src="https://github.com/user-attachments/assets/61a201de-59c1-443a-9bff-a594b704c575" />
 
+
 demo key management:
+
 nội dung file .evn
 <img width="352" height="369" alt="Screenshot 2025-12-08 134927" src="https://github.com/user-attachments/assets/ef3ccbe7-0463-4f5e-bfec-054dbc6a57ab" />
 
